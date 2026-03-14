@@ -1,4 +1,5 @@
 from cli.commands.cli_insert_commands import InsertCommandCLI
+from cli.commands.cli_query_command import QueryCommand
 class menuCLI:
     def __init__(self):
         pass
@@ -21,11 +22,9 @@ class menuCLI:
 
 
             opcao = input("Escolha uma opção: ").strip()
-
-
+            
             if opcao == "1":
                 self.menu_acusado()
-
 
             elif opcao == "2":
                 self.menu_acusador()
@@ -33,13 +32,11 @@ class menuCLI:
             elif opcao == "3":
                 self.menu_acordo()
 
-
             elif opcao == "4":
                 self.menu_audiencia()
             
             elif opcao == "5":
                 self.menu_denuncias()
-
 
             elif opcao == "6":
                 self.menu_endereco()
@@ -47,27 +44,21 @@ class menuCLI:
             elif opcao == "7":
                 self.menu_mediador()
 
-
             elif opcao == "8":
                 self.menu_prefeitura()
-
 
             elif opcao == "9":
                 self.menu_pessoa()
 
-
             elif opcao == "10":
                 self.menu_usuario()
-
 
             elif opcao == "0":
                 break
 
-
             else:
                 print("Opção inválida!")
                 continue
-
 
     def menu_acusado(self):
         while True:
@@ -75,21 +66,18 @@ class menuCLI:
             print("1 - Inserir Acusado")
             print("0 - Sair")
 
-
             opcao_acusado = (input("Escolha uma opção: ")).strip()
-
 
             if opcao_acusado == "1":
                 op = InsertCommandCLI()  
                 op.insert_accused()              
 
-
             elif opcao_acusado == "0":
                 break
             
             else:
-                return "Opção Inválida!"
-
+                print("Opção inválida!")
+                continue
 
     def menu_denuncias(self):
         while True:
@@ -103,27 +91,30 @@ class menuCLI:
             print("0 - Sair")
             opcao_denuncia = (input("Escolha uma opção: "))
             if opcao_denuncia == "1":
-                return
-
+                consulta = InsertCommandCLI()
+                consulta.insert_complaint()
 
             elif opcao_denuncia == "2":
-                return            
-
+                consulta = QueryCommand()
+                consulta.cli_query_complaint_date()         
 
             elif opcao_denuncia == "3":
-                return
+                consulta = QueryCommand()
+                consulta.cli_query_complaint_cause()
+
             elif opcao_denuncia == "4":
-                return
+                pass
             
             elif opcao_denuncia == "5":
-                return
+                consulta = QueryCommand()
+                consulta.cli_complaint_accused_name()
+            
             elif opcao_denuncia == "6":
-                return
+                consulta = QueryCommand()
+                consulta.cli_query_complain_without_audience()
             else:
-                return "Opção Inválida!"
-
-
-
+                print("Opção inválida!")
+                continue
 
     def menu_audiencia(self):
         while True:
@@ -138,14 +129,21 @@ class menuCLI:
             if opcao_audiencia == "1":
                 insert = InsertCommandCLI()
                 insert.insert_audience()
+
             elif opcao_audiencia == "2":
-                return            
+                consulta = QueryCommand()
+                consulta.cli_query_audience_date_and_place()    
+
             elif opcao_audiencia == "3":
-                return
+                consulta = QueryCommand()
+                consulta.cli_query_audience_without_agreement()
+
             elif opcao_audiencia == "4":
-                return
+                pass
+
             elif opcao_audiencia == "5":
-                return
+                pass
+
             elif opcao_audiencia == "0":
                 break
             else:
@@ -160,14 +158,21 @@ class menuCLI:
             print("2- Consultar mediadores da minha cidade - sem exibir dados sensiveis")
             print("0 - Sair")
             opcao_mediador = (input("Escolha uma opção: "))
+
             if opcao_mediador == "1":
-                return
+                consulta = InsertCommandCLI()
+                consulta.insert_medidador()
+
             elif opcao_mediador == "2":
-                return   
+                consulta = QueryCommand()
+
+                consulta.cli_query_mediator_city() 
             elif opcao_mediador == "0":
-                break  
+                break 
+
             else:
-                return "Opção Inválida!"                  
+               print("Opção inválida!")
+               continue              
 
 
     def menu_pessoa(self):
@@ -176,13 +181,16 @@ class menuCLI:
             print("1 - Cadastrar pessoa")
             print("0 - Sair")
             opcao_pessoa = (input("Escolha uma opção: ")).strip()
+
             if opcao_pessoa == "1":   
-                return       
+                consulta = InsertCommandCLI()    
+                consulta.insert_pessoa() 
+
             elif opcao_pessoa == "0":
                 break
+
             else:
                 return "Opção Inválida!"
-
 
     def menu_acusador(self):
         while True:
@@ -190,13 +198,16 @@ class menuCLI:
             print("1 - Cadastrar acusador")
             print("0 - Sair")
             opcao_acusador = (input("Escolha uma opção: ")).strip()
+            
             if opcao_acusador == "1":   
-                return       
+                consulta = InsertCommandCLI()  
+                consulta.insert_accuser()
+
             elif opcao_acusador == "0":
                 break
+
             else:
                 return "Opção Inválida!"
-
 
     def menu_endereco(self):
          while True:
@@ -204,12 +215,17 @@ class menuCLI:
             print("1 - Cadastrar endereco")
             print("0 - Sair")
             opcao_endereco = (input("Escolha uma opção: ")).strip()
+
             if opcao_endereco == "1":   
-                return       
+                consulta = InsertCommandCLI()   
+                consulta.insert_adress()   
+
             elif opcao_endereco == "0":
                 break
+
             else:
-                return "Opção Inválida!"
+                print("Opção inválida!")
+                continue
 
 
     def menu_prefeitura(self):
@@ -218,13 +234,21 @@ class menuCLI:
             print("1 - Cadastrar prefeitura")
             print("1 - Consultar prefeituras disponíveis - que usam o sistema")
             print("0 - Sair")
-            opcao_acusador = (input("Escolha uma opção: ")).strip()
-            if opcao_acusador == "1":   
-                return       
-            elif opcao_acusador == "0":
+            opcao_prefeitura = (input("Escolha uma opção: ")).strip()
+
+            if opcao_prefeitura == "1":   
+                pass
+
+            elif opcao_prefeitura == "0":
+                consulta = QueryCommand()
+                consulta.cli_town_halls()
+
+            elif opcao_prefeitura == "0":
                 break
+
             else:
-                return "Opção Inválida!"
+                print("Opção inválida!")
+                continue
 
 
     def menu_acordo(self):
@@ -233,12 +257,13 @@ class menuCLI:
             print("1 - Cadastrar acordo")
             print("0 - Sair")
             opcao_acordo = (input("Escolha uma opção: "))
+
             if opcao_acordo == "1":
-                return 
-            
+                consulta = InsertCommandCLI()
+                consulta.insert_agreement()
+
             elif opcao_acordo == "0":
                 break
-
 
             else:
                 return "Opção Inválida!"
@@ -250,9 +275,14 @@ class menuCLI:
             print("1 - Cadastrar usuário")
             print("0 - Sair")
             opcao_usuario = (input("Escolha uma opção: "))
+
             if opcao_usuario == "1":   
-                return       
+                consulta = InsertCommandCLI()
+                consulta.insert_usuario()  
+
             elif opcao_usuario == "0":
                 break
+            
             else:
-                return "Opção Inválida!"
+                print("Opção inválida!")
+                continue

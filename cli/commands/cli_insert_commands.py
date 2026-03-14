@@ -79,7 +79,7 @@ class InsertCommandCLI:
             inserscao = InsertComplaint(audiencia_id, acusador_id, acusado_id,causa_denuncia, detalhamento, data)
             inserscao.insert()
         except Exception as e:
-            return "Erro ao cadastrar denúncia:", e
+            print("Erro ao cadastrar denúncia:", e)
 
 
     def insert_gestor(self):
@@ -96,7 +96,7 @@ class InsertCommandCLI:
 
 
         except Exception as e:
-            return "Erro ao cadastrar gestor:", e
+            print(print("Erro ao cadastrar gestor:", e))
 
 
     def insert_medidador(self):
@@ -104,7 +104,7 @@ class InsertCommandCLI:
         pessoa_id = int(input("Id da pessoa: "))
         usuario_id = int(input("Id do usuario: "))
         prefeitura_id = int(input("Id da prfeitura: "))
-        status = input("status do gestor: ")
+        status = input("status do mediador: ")
         try:
             insercao = InsertMediator(pessoa_id, usuario_id, prefeitura_id, status)
             insercao.insert()
