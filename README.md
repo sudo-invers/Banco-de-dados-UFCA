@@ -5,7 +5,7 @@
 (É necessário PostgreSQL para que o sistema funcione: https://www.postgresql.org/download)
 
 - Criar ambiente virtual com "python3 -m venv .env"
-- logar no ambiente virtual: pelo Linux "source ./.venv/bin/activate" | pelo windows "
+- logar no ambiente virtual: pelo Linux "source ./.venv/bin/activate" | pelo windows ".\env\Scripts\activate.ps1"
 - Instalar dependências com o "pip install -r requeriments.txt"
 - use o comando "python3 -m main"
 
