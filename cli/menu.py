@@ -1,4 +1,4 @@
-from cli.commands.insert_command import InsertCommandCLI
+from cli.commands.cli_insert_commands import InsertCommandCLI
 class menuCLI:
     def __init__(self):
         pass
