@@ -113,7 +113,7 @@ class InsertCommandCLI:
 
     def insert_pessoa(self):
         print("\n=== Cadastro de Pessoa ===")
-        nome = int(input("Nome: "))
+        nome = input("Nome: ")
         telefone = int(input("Telefone: "))
         documento = input("Documento da pessoa: ")
         nascimento = input("Data de nascimento (AAAA-MM-DD): ")
