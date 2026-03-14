@@ -42,7 +42,23 @@ class QueryComplaintCause:
         self.query = connect.cur.fetchall()
         connect.close()
         return self.query
-#Consultar denucias com mesma causa no mesmo periodo
+
+
+#Consultar denucias com mesma causa no periodo específico
+class QueryComplaintCausePeriod():
+    def __init__(self, causa, data_ini, data_fim):
+        self.sql_cause_period_complaint = """SELECT * FROM DENUNCIA 
+        WHERE causa = %s AND (data_denuncia >= %s AND data_denuncia <= %s)"""
+        self.cause_complaint = causa
+        self.data_ini = data_ini
+        self.data_fim = data_fim
+
+    def con(self) -> list[tuple]:
+        connect.cur.execute(self.sql_cause_period_complaint, (self.cause_complaint, self.data_ini, self.data_fim))
+        self.query = connect.cur.fetchall()
+        connect.close()
+        return self.query
+
 #Consultar denuncias com o meu nome: acusado
 class QueryComplaintAccusedName:
     def __init__(self, name):
