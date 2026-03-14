@@ -2,9 +2,10 @@ from psycopg2 import connect
 import psycopg2
 class ConnectDatabase:
 
-    def __init__(self, database:str, user:str, password: str):
+    def __init__(self):
         # TODO: Os parametros database, user e password, variam de acordo
         # Com a instalacao de cada pessoa do postgres
+        
         self.connect = connect(
             database="postgres",
             user="postgres",

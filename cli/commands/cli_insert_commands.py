@@ -5,7 +5,6 @@ class InsertCommandCLI:
     '''Classe 'CommandInserCLI' mostra os atributos que o usuário deve digitar na CLI para cadastrar os dados desejados, por meio 
     de chamadas às funções de database.'''
 
-
     def __init__(self):
         pass
 
@@ -79,7 +78,7 @@ class InsertCommandCLI:
             inserscao = InsertComplaint(audiencia_id, acusador_id, acusado_id,causa_denuncia, detalhamento, data)
             inserscao.insert()
         except Exception as e:
-            print("Erro ao cadastrar denúncia:", e)
+            return "Erro ao cadastrar denúncia:", e
 
 
     def insert_gestor(self):
@@ -96,7 +95,7 @@ class InsertCommandCLI:
 
 
         except Exception as e:
-            print(print("Erro ao cadastrar gestor:", e))
+            return "Erro ao cadastrar gestor:", e
 
 
     def insert_medidador(self):
@@ -104,7 +103,7 @@ class InsertCommandCLI:
         pessoa_id = int(input("Id da pessoa: "))
         usuario_id = int(input("Id do usuario: "))
         prefeitura_id = int(input("Id da prfeitura: "))
-        status = input("status do mediador: ")
+        status = input("status do gestor: ")
         try:
             insercao = InsertMediator(pessoa_id, usuario_id, prefeitura_id, status)
             insercao.insert()
