@@ -5,8 +5,8 @@ class ConnectDatabase:
         self.connect = psycopg2.connect(
             database="sgcc",
             host="localhost",
-            user="admin",
-            password=" ",
+            user="postgres",
+            password="postgres",
             port="5432"
         )
 
