@@ -1,4 +1,13 @@
 from cli.menu import menuCLI
+from database.connect import ConnectDatabase
 
-main = menuCLI()
-main.menu_principal()
+#main = menuCLI()
+#main.menu_principal()
+
+def main():
+    menu = menuCLI()
+    menu.menu_principal()
+
+if __name__ == "__main__":
+    main()
+    
