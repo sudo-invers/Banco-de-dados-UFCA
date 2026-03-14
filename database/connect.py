@@ -1,12 +1,12 @@
-import psycopg2
+from psycopg2 import connect
 class ConnectDatabase:
 
     def __init__(self):
-        self.connect = psycopg2.connect(
+        self.connect = connect(
             database="sgcc",
             host="localhost",
             user="admin",
-            password=" ",
+            password="admin",
             port="5432"
         )
 

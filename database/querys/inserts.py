@@ -1,4 +1,4 @@
-from connect import ConnectDatabase
+from database.connect import ConnectDatabase
 connect = ConnectDatabase()
 #inserçoes
 class SaveBD:
@@ -121,4 +121,3 @@ class InsertAgreement:
     def insert(self):
         dados = SaveBD(self.sql_insert, self.agreement)
         return dados.save()
-    

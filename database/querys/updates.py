@@ -1,4 +1,4 @@
-from connect import ConnectDatabase
+from database.connect import ConnectDatabase
 connect = ConnectDatabase()
 
 
@@ -16,7 +16,14 @@ class UpdateComplaintOnAudience():
         connect.cur.execute(self.sql_audience_id_into_complaint, 
                             (self.audience_id, self.complaint_id))
         return True
-    
+
+
+
+class UpdateAcusado():
+    def __init__(self,acusado_id,)
+
+
+
 #atualizar dados do acusado - usuario - email, senha, telefone
 #atualizar dados do acusador - usuario - email, senha, telefone
 #atualizar status do acordo
