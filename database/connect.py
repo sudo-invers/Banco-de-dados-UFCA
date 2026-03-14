@@ -9,7 +9,7 @@ class ConnectDatabase:
         self.connect = connect(
             database="postgres",
             user="postgres",
-            password="superSudo!",
+            password="3323",
             host="localhost",
             port="5432",
         )
