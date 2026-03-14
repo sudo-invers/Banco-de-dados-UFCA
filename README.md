@@ -1,5 +1,14 @@
 # Grupo08 - Banco de dados
 
+# Como rodar o sistema
+
+(É necessário PostgreSQL para que o sistema funcione: https://www.postgresql.org/download)
+
+- Criar ambiente virtual com "python3 -m venv .env"
+- Instalar dependências com o "pip install -r requeriments.txt"
+- use o comando "python3 -m main"
+
+
 # Sistema de Mediação de conflitos comunitários
 
 Pergunta norteadora: De que forma um sistema de mediação de conflitos comunitários pode organizar casos, audiências e acordos, preservando sigilo e estatísticas públicas?
@@ -200,3 +209,8 @@ estruturar as informações;
 
 # Tuplas 
 [Link para acessar as tuplas](https://escolatrabalhador4-my.sharepoint.com/:x:/g/personal/leticia_365diasgmail_com_escoladotrabalhador40_com_br/IQBMRvCmjCBoRqpJFVDIF9jfAZoY0IGKCmDuzy0b7IW5tnY?e=BsGLnA)
+
+# Commits no liveshare
+
+git commit -m "Co-authored-by: Dorian Dayvid Gomes Feitosa <OtherDinosaur@users.noreply.github.com>"
+
