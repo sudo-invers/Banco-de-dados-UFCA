@@ -1,0 +1,6 @@
+[database]
+database = "postgres"
+user = "postgres"
+password = "superSudo!"
+host = "localhost"
+port = "5432"
