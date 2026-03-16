@@ -13,18 +13,18 @@ python3 -m venv .env
 Pelo Linux 
 
 ````bash 
-"source ./.venv/bin/activate"
+source ./.venv/bin/activate
 ```` 
 
 Pelo windows
 
 ````bash
-".\env\Scripts\activate.ps1"
+.\env\Scripts\activate.ps1
 ```` 
 - Instale as dependências
 
 ````bash
-"pip install -r requeriments.txt"
+pip install -r requeriments.txt
 ````
 
 Para rodar a cli use o seguinte comando:
