@@ -1,14 +1,12 @@
-from cli.menu import menuCLI
-from database.connect import ConnectDatabase
+from cli.login_menu import LoginMenu
 
-#main = menuCLI()
-#main.menu_principal()
+# main = menuCLI()
+# main.menu_principal()
+
 
 def main():
-
-    ConnectDatabase()
-    menu = menuCLI()
-    menu.menu_principal()
+    login = LoginMenu()
+    login.menu()
 
 
 if __name__ == "__main__":
