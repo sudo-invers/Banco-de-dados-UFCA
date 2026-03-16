@@ -4,11 +4,37 @@
 
 (É necessário PostgreSQL para que o sistema funcione: https://www.postgresql.org/download)
 
-- Criar ambiente virtual com "python3 -m venv .env"
-- logar no ambiente virtual: pelo Linux "source ./.venv/bin/activate" | pelo windows ".\env\Scripts\activate.ps1"
-- Instalar dependências com o "pip install -r requeriments.txt"
-- use o comando "python3 -m main"
+- Para criar o ambiente virtual  digite:
+````bash
+python3 -m venv .env
+````
+- Logar no ambiente virtual:
 
+Pelo Linux 
+
+````bash 
+"source ./.venv/bin/activate"
+```` 
+
+Pelo windows
+
+````bash
+".\env\Scripts\activate.ps1"
+```` 
+- Instale as dependências
+
+````bash
+"pip install -r requeriments.txt"
+````
+
+Para rodar a cli use o seguinte comando:
+````bash
+ python3 -m main
+````
+Ou simplesmente
+````bash
+ python -m main
+````
 
 # Sistema de Mediação de conflitos comunitários
 
