@@ -1,4 +1,3 @@
-from typing import Any, Dict, List, Optional, Tuple, Union
 from psycopg2 import connect
 import toml
 
@@ -7,7 +6,9 @@ class ConnectDatabase:
     def __init__(self, config_path: str = "database/config.toml"):
         self.config_path = config_path
 
-    def conectar(self, user: Optional[str], password: Optional[str]):
+    def conectar(
+        self, user: str | None = None, password: str | None = None
+    ):  # user e password, São usado no login
         try:
             config = toml.load(self.config_path)["database"]
 
@@ -28,7 +29,7 @@ class ConnectDatabase:
             print(f"\nErro ao conectar ao banco de dados: {e}")
             raise
 
-    def execute_query(self, query: str, params=None, is_select: bool = False):
+    def execute_query(self, query: str, params: tuple | None, is_select: bool = False):
         """
         Um método mestre para evitar repetição de código.
         """
@@ -67,22 +68,10 @@ class ConnectDatabase:
         print("Conexão encerrada com segurança.")
 
     def inicializar_schema(self, schema_path: str = "database/schema.sql") -> None:
-        if not self.conn or not self.cur:
-            raise ConnectionError(
-                "Conexão não estabelecida. Chame conectar() primeiro."
-            )
+        with open(schema_path, "r") as f:
+            sql_script = f.read()
 
-        try:
-            with open(schema_path, "r") as f:
-                sql_script = f.read()
+        self.cur.execute(sql_script)
 
-            self.cur.execute(sql_script)
-
-            self.conn.commit()
-            print("Schema executado e alterações salvas.")
-
-        except Exception as e:
-            if self.conn:
-                self.conn.rollback()
-            print(f"Erro ao rodar schema: {e}")
-            raise
+        self.conn.commit()
+        print("Schema executado e alterações salvas.")
