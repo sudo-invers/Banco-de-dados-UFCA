@@ -46,7 +46,6 @@ class ConnectDatabase:
             print(f"Erro na operação: {e}")
             return None
 
-    # Agora seus métodos ficam magrinhos e seguros:
     def insert(self, query: str, params):
         return self.execute_query(query, params)
 
