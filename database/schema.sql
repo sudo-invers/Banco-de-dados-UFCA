@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS "PESSOA" (
   "n_inscricao_tributaria" VARCHAR,
   "data_nascimento" DATE,
 
-  PRIMARY KEY ("pessoa_id")
+  PRIMARY KEY ("pessoa_id"),
   
   CONSTRAINT "FK_PESSOA_endereco_id"
   	FOREIGN KEY ("endereco_id")
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS "ACUSADO" (
   "acusado_id" INTEGER,
   "pessoa_id" INTEGER,
   
-  PRIMARY KEY ("acusado_id")
+  PRIMARY KEY ("acusado_id"),
 
   CONSTRAINT "FK_ACUSADO_pessoa_id"
     FOREIGN KEY ("pessoa_id")
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS "ACUSADOR" (
   "pessoa_id" INTEGER,
   "usuario_id" INTEGER,
   
-  PRIMARY KEY ("acusador_id")
+  PRIMARY KEY ("acusador_id"),
   
   CONSTRAINT "FK_ACUSADOR_pessoa_id"
     FOREIGN KEY ("pessoa_id")
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS "PREFEITURA" (
   "endereco_id" INTEGER,
   "cnpj" VARCHAR,
 
-  PRIMARY KEY ("prefeitura_id")
+  PRIMARY KEY ("prefeitura_id"),
   
   CONSTRAINT "FK_PREFEITURA_endereco_id"
     FOREIGN KEY ("endereco_id")
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS "PREFEITURA" (
 
 CREATE TABLE IF NOT EXISTS "GESTOR" (
   "gestor_id" INTEGER,
-  "prefeitura_id" VARCHAR,
+  "prefeitura_id" INTEGER,
   "usuario_id" INTEGER,
   "pessoa_id" INTEGER,
   "status_gestor" VARCHAR,
@@ -95,11 +95,11 @@ CREATE TABLE IF NOT EXISTS "MEDIADOR" (
   
   CONSTRAINT "FK_MEDIADOR_prefeitura_id"
     FOREIGN KEY ("prefeitura_id")
-      REFERENCES "PREFEITURA"("prefeitura_id")
+      REFERENCES "PREFEITURA"("prefeitura_id"),
 
   CONSTRAINT "FK_MEDIADOR_pessoa_id"
     FOREIGN KEY ("pessoa_id")
-      REFERENCES "PESSOA"("pessoa_id")
+      REFERENCES "PESSOA"("pessoa_id"),
       
   CONSTRAINT "FK_MEDIADOR_usuario_id"
     FOREIGN KEY ("usuario_id")
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS "AUDIENCIA" (
   
   CONSTRAINT "FK_AUDIENCIA_mediador_id"
     FOREIGN KEY ("mediador_id")
-      REFERENCES "MEDIADOR"("mediador_id")
+      REFERENCES "MEDIADOR"("mediador_id"),
 
   CONSTRAINT "FK_AUDIENCIA_endereco_id"
   	FOREIGN KEY ("endereco_id")
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS "ACORDO" (
   "status_acordo" VARCHAR NOT NULL,
   "data_acordo" DATE NOT NULL,
 
-  PRIMARY KEY ("acordo_id")
+  PRIMARY KEY ("acordo_id"),
 
   CONSTRAINT "FK_ACORDO_audiencia_id"
     FOREIGN KEY ("audiencia_id")

@@ -16,22 +16,24 @@ class LoginMenu:
         while True:
             print("\n=== LOGIN ===")
             print("1 - Entrar")
+            print("2 - Utilizar ultimo login")
             print("0 - Sair")
             opcao = int(input("Escolha uma opção: "))
 
-            if opcao.is_integer() is False or opcao < 0 or opcao > 1:
+            if opcao.is_integer() is False or opcao < 0 or opcao > 2:
                 print(f"Opcão '{opcao}' invalida, tente novamente")
 
             elif opcao == 1:
                 self.__login()
-                menu = menuCLI()
-                menu.menu_principal()
-
+                menuCLI().menu_principal()
                 break
+            elif opcao == 2:
+                menuCLI().menu_principal()
             elif opcao == 0:
                 break
 
     def __login(self):
+        """Faz o login, pedindo usuario e senha"""
         config = toml.load("database/config.toml")
         while True:
             nome = input("Nome do usuário (Padrão: postgres): ")
@@ -50,4 +52,4 @@ class LoginMenu:
                 toml.dump(config, f)
 
             print("Conectando ao banco de dados")
-            return ConnectDatabase(nome, senha)
+            return ConnectDatabase().conectar(nome, senha)
