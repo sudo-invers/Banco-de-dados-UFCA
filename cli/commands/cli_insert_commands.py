@@ -1,12 +1,12 @@
-from database.querys.inserts import Inserts
+from database.querys.sql_inserts import SQLInsertion
 
 
-class InsertCommandCLI:
+class CLIInsertCommand:
     """Classe 'CommandInserCLI' mostra os atributos que o usuário deve digitar na CLI para cadastrar os dados desejados, por meio
     de chamadas às funções de database."""
 
     def __init__(self):
-        self.sert = Inserts()
+        self.repo = SQLInsertion()
 
     def insert_accused(self):
         pessoa_id = int(input("Digite o ID da pessoa: "))

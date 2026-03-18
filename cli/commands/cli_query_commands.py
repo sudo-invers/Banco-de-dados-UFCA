@@ -1,7 +1,7 @@
-from database.querys.querys import QueryAudienceAtDateAndPlace, QueryAudienceForAccused, QueryAudienceForAccuser, QueryAudienceWithoutAgreement, QueryComplaintAccusedName, QueryComplaintCause, QueryComplaintOfDate, QueryComplaintWithoutAudience, QueryMediatorCity, QueryTownHalls
+from database.querys.sql_querys import QueryAudienceAtDateAndPlace, QueryAudienceForAccused, QueryAudienceForAccuser, QueryAudienceWithoutAgreement, QueryComplaintAccusedName, QueryComplaintCause, QueryComplaintOfDate, QueryComplaintWithoutAudience, QueryMediatorCity, QueryTownHalls
 
 
-class QueryCommand:
+class CLIQueryCommand:
     '''A Classe mostra as informações que o usuário deve inserir para poder realizar consultas específicas no sistema.'''
     def __init__(self):
         pass

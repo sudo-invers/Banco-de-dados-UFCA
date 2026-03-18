@@ -1,7 +1,7 @@
 from database.connect import ConnectDatabase
 
 
-class Update:
+class SQLUpdate:
     def __init__(self):
         self.conn = ConnectDatabase()
         self.conn.conectar()

@@ -1,15 +1,15 @@
 
-CREATE TABLE IF NOT EXISTS usuario (
-    "usuario_id" INTEGER,
-    "email" VARCHAR,
-    "senha" VARCHAR,
-    "tipo_usuario" VARCHAR,
+CREATE TABLE IF NOT EXISTS usuarios (
+    "usuario_id" INTEGER GENERATED ALWAYS AS IDENTITY,
+    "email" VARCHAR NOT NULL UNIQUE,
+    "senha" VARCHAR NOT NULL,
+    "tipo_usuario" VARCHAR NOT NULL,
 
     PRIMARY KEY ("usuario_id")
 );
 
-CREATE TABLE IF NOT EXISTS endereco (
-    "endereco_id" INTEGER,
+CREATE TABLE IF NOT EXISTS enderecos (
+    "endereco_id" INTEGER GENERATED ALWAYS AS IDENTITY,
     "rua" VARCHAR,
     "bairro" VARCHAR,
     "cidade" VARCHAR,
@@ -18,10 +18,10 @@ CREATE TABLE IF NOT EXISTS endereco (
     PRIMARY KEY ("endereco_id")
 );
 
-CREATE TABLE IF NOT EXISTS pessoa (
-    "pessoa_id" INTEGER,
+CREATE TABLE IF NOT EXISTS pessoas (
+    "pessoa_id" INTEGER GENERATED ALWAYS AS IDENTITY,
     "endereco_id" INTEGER,
-    "nome" VARCHAR,
+    "nome" VARCHAR NOT NULL,
     "telefone" VARCHAR,
     "n_inscricao_tributaria" VARCHAR,
     "data_nascimento" DATE,
@@ -29,47 +29,51 @@ CREATE TABLE IF NOT EXISTS pessoa (
     PRIMARY KEY ("pessoa_id"),
 
     CONSTRAINT "FK_PESSOA_endereco_id"
-    FOREIGN KEY ("endereco_id")
-    REFERENCES endereco ("endereco_id")
+        FOREIGN KEY ("endereco_id")
+        REFERENCES enderecos ("endereco_id")
 );
 
-CREATE TABLE IF NOT EXISTS acusado (
-    "acusado_id" INTEGER,
-    "pessoa_id" INTEGER,
+CREATE TABLE IF NOT EXISTS acusados (
+    "acusado_id" INTEGER GENERATED ALWAYS AS IDENTITY,
+    "pessoa_id" INTEGER NOT NULL,
 
     PRIMARY KEY ("acusado_id"),
 
-    CONSTRAINT "FK_ACUSADO_pessoa_id"
-    FOREIGN KEY ("pessoa_id")
-    REFERENCES pessoa ("pessoa_id")
+    CONSTRAINT "FK_ACUSADOS_pessoa_id"
+        FOREIGN KEY ("pessoa_id")
+        REFERENCES pessoas ("pessoa_id")
 );
 
-CREATE TABLE IF NOT EXISTS acusador (
-    "acusador_id" INTEGER,
-    "pessoa_id" INTEGER,
-    "usuario_id" INTEGER,
+CREATE TABLE IF NOT EXISTS acusadores (
+    "acusador_id" INTEGER GENERATED ALWAYS AS IDENTITY,
+    "pessoa_id" INTEGER NOT NULL,
+    "usuario_id" INTEGER, -- nulo para denúncias anônimas
 
     PRIMARY KEY ("acusador_id"),
 
-    CONSTRAINT "FK_ACUSADOR_pessoa_id"
-    FOREIGN KEY ("pessoa_id")
-    REFERENCES pessoa ("pessoa_id")
+    CONSTRAINT "FK_ACUSADORES_pessoa_id"
+        FOREIGN KEY ("pessoa_id")
+        REFERENCES pessoas ("pessoa_id"),
+
+    CONSTRAINT "FK_ACUSADORES_usuario_id"
+        FOREIGN KEY ("usuario_id")
+        REFERENCES usuarios ("usuario_id")
 );
 
-CREATE TABLE IF NOT EXISTS prefeitura (
-    "prefeitura_id" INTEGER,
-    "endereco_id" INTEGER,
-    "cnpj" VARCHAR,
+CREATE TABLE IF NOT EXISTS prefeituras (
+    "prefeitura_id" INTEGER GENERATED ALWAYS AS IDENTITY,
+    "endereco_id" INTEGER NOT NULL,
+    "cnpj" VARCHAR NOT NULL,
 
     PRIMARY KEY ("prefeitura_id"),
 
-    CONSTRAINT "FK_PREFEITURA_endereco_id"
-    FOREIGN KEY ("endereco_id")
-    REFERENCES endereco ("endereco_id")
+    CONSTRAINT "FK_PREFEITURAS_endereco_id"
+        FOREIGN KEY ("endereco_id")
+        REFERENCES enderecos ("endereco_id")
 );
 
-CREATE TABLE IF NOT EXISTS gestor (
-    "gestor_id" INTEGER,
+CREATE TABLE IF NOT EXISTS gestores (
+    "gestor_id" INTEGER GENERATED ALWAYS AS IDENTITY,
     "prefeitura_id" INTEGER,
     "usuario_id" INTEGER,
     "pessoa_id" INTEGER,
@@ -77,70 +81,77 @@ CREATE TABLE IF NOT EXISTS gestor (
 
     PRIMARY KEY ("gestor_id"),
 
-    CONSTRAINT "FK_GESTOR_prefeitura_id"
-    FOREIGN KEY ("prefeitura_id")
-    REFERENCES prefeitura ("prefeitura_id")
+    CONSTRAINT "FK_GESTORES_prefeitura_id"
+        FOREIGN KEY ("prefeitura_id")
+        REFERENCES prefeituras ("prefeitura_id"),
+
+    CONSTRAINT "FK_GESTORES_usuario_id"
+        FOREIGN KEY ("usuario_id")
+        REFERENCES usuarios ("usuario_id"),
+
+    CONSTRAINT "FK_GESTORES_pessoa_id"
+        FOREIGN KEY ("pessoa_id")
+        REFERENCES pessoas ("pessoa_id")
 );
 
-CREATE TABLE IF NOT EXISTS mediador (
-    "mediador_id" INTEGER,
-    "pessoa_id" INTEGER,
-    "usuario_id" INTEGER,
-    "prefeitura_id" INTEGER,
-    "status_mediador" VARCHAR,
+CREATE TABLE IF NOT EXISTS mediadores (
+    "mediador_id" INTEGER GENERATED ALWAYS AS IDENTITY,
+    "pessoa_id" INTEGER NOT NULL,
+    "usuario_id" INTEGER NOT NULL,
+    "prefeitura_id" INTEGER NOT NULL,
+    "status_mediador" VARCHAR NOT NULL,
 
     PRIMARY KEY ("mediador_id"),
 
-    CONSTRAINT "FK_MEDIADOR_prefeitura_id"
-    FOREIGN KEY ("prefeitura_id")
-    REFERENCES prefeitura ("prefeitura_id"),
+    CONSTRAINT "FK_MEDIADORES_prefeitura_id"
+        FOREIGN KEY ("prefeitura_id")
+        REFERENCES prefeituras ("prefeitura_id"),
 
-    CONSTRAINT "FK_MEDIADOR_pessoa_id"
-    FOREIGN KEY ("pessoa_id")
-    REFERENCES pessoa ("pessoa_id"),
+    CONSTRAINT "FK_MEDIADORES_pessoa_id"
+        FOREIGN KEY ("pessoa_id")
+        REFERENCES pessoas ("pessoa_id"),
 
-    CONSTRAINT "FK_MEDIADOR_usuario_id"
-    FOREIGN KEY ("usuario_id")
-    REFERENCES usuario ("usuario_id")
+    CONSTRAINT "FK_MEDIADORES_usuario_id"
+        FOREIGN KEY ("usuario_id")
+        REFERENCES usuarios ("usuario_id")
 );
 
-CREATE TABLE IF NOT EXISTS audiencia (
-    "audiencia_id" INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS audiencias (
+    "audiencia_id" INTEGER GENERATED ALWAYS AS IDENTITY,
     "mediador_id" INTEGER NOT NULL,
     "endereco_id" INTEGER NOT NULL,
-    "status_audiencia" VARCHAR,
+    "status_audiencia" VARCHAR NOT NULL,
     "data_audiencia" TIMESTAMP NOT NULL,
 
     PRIMARY KEY ("audiencia_id"),
 
-    CONSTRAINT "FK_AUDIENCIA_mediador_id"
-    FOREIGN KEY ("mediador_id")
-    REFERENCES mediador ("mediador_id"),
+    CONSTRAINT "FK_AUDIENCIAS_mediador_id"
+        FOREIGN KEY ("mediador_id")
+        REFERENCES mediadores ("mediador_id"),
 
-    CONSTRAINT "FK_AUDIENCIA_endereco_id"
-    FOREIGN KEY ("endereco_id")
-    REFERENCES endereco ("endereco_id")
+    CONSTRAINT "FK_AUDIENCIAS_endereco_id"
+        FOREIGN KEY ("endereco_id")
+        REFERENCES enderecos ("endereco_id")
 );
 
-CREATE TABLE IF NOT EXISTS acordo (
-    "acordo_id" INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS acordos (
+    "acordo_id" INTEGER GENERATED ALWAYS AS IDENTITY,
     "audiencia_id" INTEGER NOT NULL,
     "status_acordo" VARCHAR NOT NULL,
     "data_acordo" DATE NOT NULL,
 
     PRIMARY KEY ("acordo_id"),
 
-    CONSTRAINT "FK_ACORDO_audiencia_id"
-    FOREIGN KEY ("audiencia_id")
-    REFERENCES audiencia ("audiencia_id")
+    CONSTRAINT "FK_ACORDOS_audiencia_id"
+        FOREIGN KEY ("audiencia_id")
+        REFERENCES audiencias ("audiencia_id")
 );
 
 
 
-CREATE TABLE IF NOT EXISTS denuncia (
-    "denuncia_id" INTEGER NOT NULL,
-    -- pode ser nulo, pois a denúncia é feita antes da audiência ser marcada
-    "audiencia_id" INTEGER,
+CREATE TABLE IF NOT EXISTS denuncias (
+    "denuncia_id" INTEGER GENERATED ALWAYS AS IDENTITY,
+    "audiencia_id" INTEGER, -- pode ser nulo, pois a denúncia é feita antes da audiência ser marcada
     "acusador_id" INTEGER NOT NULL,
     "acusado_id" INTEGER NOT NULL,
     "causa_denuncia" VARCHAR NOT NULL,
@@ -149,15 +160,15 @@ CREATE TABLE IF NOT EXISTS denuncia (
 
     PRIMARY KEY ("denuncia_id"),
 
-    CONSTRAINT "FK_DENUNCIA_audiencia_id"
-    FOREIGN KEY ("audiencia_id")
-    REFERENCES audiencia ("audiencia_id"),
+    CONSTRAINT "FK_DENUNCIAS_audiencia_id"
+        FOREIGN KEY ("audiencia_id")
+        REFERENCES audiencias ("audiencia_id"),
 
-    CONSTRAINT "FK_DENUNCIA_acusador_id"
-    FOREIGN KEY ("acusador_id")
-    REFERENCES acusador ("acusador_id"),
+    CONSTRAINT "FK_DENUNCIAS_acusador_id"
+        FOREIGN KEY ("acusador_id")
+        REFERENCES acusadores ("acusador_id"),
 
-    CONSTRAINT "FK_DENUNCIA_acusado_id"
-    FOREIGN KEY ("acusado_id")
-    REFERENCES acusado ("acusado_id")
+    CONSTRAINT "FK_DENUNCIAS_acusado_id"
+        FOREIGN KEY ("acusado_id")
+        REFERENCES acusados ("acusado_id")
 );

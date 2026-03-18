@@ -1,5 +1,5 @@
 from cli.commands.cli_insert_commands import InsertCommandCLI
-from cli.commands.cli_query_command import QueryCommand
+from cli.commands.cli_query_commands import QueryCommand
 
 
 class menuCLI:

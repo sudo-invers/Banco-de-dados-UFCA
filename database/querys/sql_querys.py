@@ -1,7 +1,7 @@
 from database.connect import ConnectDatabase
 
 
-class Querys:
+class SQLQuery:
     def __init__(self):
         self.conn = ConnectDatabase()
         self.conn.conectar()

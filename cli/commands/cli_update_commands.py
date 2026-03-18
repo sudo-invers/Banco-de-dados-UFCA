@@ -1,8 +1,10 @@
-from database.querys.updates import UpdateComplaintOnAudience, UpdatePerson, UpdateAgreement
+from database.querys.sql_updates import SQLUpdate
 
-class UpdateCommands:
-    def __int__():
-        pass
+class CLIUpdateCommand:
+
+    def __int__(self):
+        self.repo = SQLUpdate()
+
     def cli_update_compaint_on_audience(self):
         #atualiza o id da audiência na tabela da denúncia
         complaint_id = int(input("Id da denúncia: "))
