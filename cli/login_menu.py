@@ -66,6 +66,7 @@ class LoginMenu:
 
             print("Conectando ao banco de dados")
             self.__init_db(nome, senha)
+            break
 
     def __init_db(self, name=None, password=None):
         db = ConnectDatabase()
