@@ -5,6 +5,16 @@ import toml
 from cli.menu import CLIMenu
 from database.connect import ConnectDatabase
 
+# Referente ao usuário do sistema, não o usuário postgres
+usuario: dict = {
+    "usuario_id": None,
+    "pessoa_id": None,
+    "email": None,
+    "tipo_usuario": None,
+
+    "id_acusador": None
+}
+
 
 class LoginMenu:
     """

@@ -1,14 +1,7 @@
 import sys
 from cli.commands.cli_insert_commands import CLIInsertCommand
 from cli.commands.cli_query_commands import CLIQueryCommand
-
-usuario: dict = {
-    "usuario_id": None,
-    "pessoa_id": None,
-    "email": None,
-    "senha": None,
-    "tipo_usuario": None
-}
+from cli.curr_user import user
 
 
 
@@ -52,7 +45,23 @@ class CLIMenu:
                 print("Opção inválida! Tente novamente.")
 
     def menu_login(self):
-        pass
+        while True:
+            print("\n=== MENU LOGIN ===")
+            print("1 - Cadastrar usuário")
+            print("2 - Fazer Login")
+            print("0 - Voltar")
+
+            opcao = input("Escolha uma opção: ").strip()
+
+            if opcao == "1":
+                self.insert_cmd.insert_user(tipo_usuario='ACUSADOR')
+            elif opcao == "2":
+                self.query_cmd.cli_query_login()
+            elif opcao == "0":
+                break
+            else:
+                print("Opção inválida!")
+
 
     def menu_denuncias(self):
         while True:
@@ -67,11 +76,7 @@ class CLIMenu:
             opcao = input("Escolha uma opção: ").strip()
 
             if opcao == "1":
-                try:
-                    acusador_id = int(input("Digite o ID do Acusador para esta denúncia: "))
-                    self.insert_cmd.insert_complaint(acusador_id)
-                except ValueError:
-                    print("Erro: O ID do acusador deve ser um número inteiro.", file=sys.stderr)
+                self.insert_cmd.insert_complaint(user.get("acusador_id"))
             elif opcao == "2":
                 self.query_cmd.cli_query_complaint_date()
             elif opcao == "3":

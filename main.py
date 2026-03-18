@@ -1,9 +1,5 @@
 from cli.login_menu import LoginMenu
 
-# main = menuCLI()
-# main.menu_principal()
-
-
 def main():
     login = LoginMenu()
     login.menu()
