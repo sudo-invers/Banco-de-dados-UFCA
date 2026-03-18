@@ -1,6 +1,7 @@
 import sys
 from datetime import date, datetime
 
+from cli.curr_user import user, set_user
 from database.querys.sql_querys import SQLQuery
 
 
@@ -8,6 +9,39 @@ class CLIQueryCommand:
     '''A Classe mostra as informações que o usuário deve inserir para poder realizar consultas específicas no sistema.'''
     def __init__(self):
         self.repo = SQLQuery()
+
+    def cli_query_login(self):
+        email: str = input("Digite seu Email: ")
+        senha_input: str = input("Digite sua senha: ")
+
+        senha = self.repo.get_password_by_email(email)
+
+        if senha is None:
+            print("Usuário não encontrado!", file=sys.stderr)
+            return
+
+        if senha_input != senha:
+            print("Senha incorreta!")
+            return
+
+        usuario_data = self.repo.get_user_by_email(email)
+
+        if not usuario_data:
+            print("Erro ao buscar dados do usuário!", file=sys.stderr)
+            return
+
+        # Atualiza o user global
+        set_user(
+            {
+                "usuario_id": usuario_data.get("usuario_id"),
+                "email": usuario_data.get("email"),
+                "pessoa_id": usuario_data.get("pessoa_id"),
+                "tipo_usuario": usuario_data.get("tipo_usuario"),
+                "id_acusador": usuario_data.get("acusador_id")
+            }
+        )
+
+        print(f"Login realizado com sucesso! Bem-vindo(a), {user['email']}")
 
 
     def cli_query_audience_date_and_place(self):

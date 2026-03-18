@@ -2,7 +2,7 @@ import sys
 from datetime import datetime, date
 from database.querys.sql_inserts import SQLInsertion
 from database.querys.sql_updates import SQLUpdate
-
+from cli.curr_user import user, set_user
 
 class CLIInsertCommand:
     """
@@ -63,12 +63,52 @@ class CLIInsertCommand:
 
         return pessoa_id
 
+    def insert_user(self, tipo_usuario: str):
+        try:
+            print("\n=== Cadastro de Usuários ===")
+
+            endereco_id: int = self._create_address()
+            pessoa_id: int = self._create_person(endereco_id=endereco_id)
+
+            email: str = input("Digite seu email: ")
+            senha: str = input("Crie uma senha de acesso: ")
+
+            usuario_id: int = self.repo.insert_user(
+                email=email,
+                senha=senha,
+                tipo_usuario=tipo_usuario
+            )
+
+            acusador_id: int = self.repo.insert_accuser(
+                pessoa_id=pessoa_id,
+                usuario_id=usuario_id
+            )
+
+            set_user(
+                {
+                    "usuario_id": usuario_id,
+                    "email": email,
+                    "pessoa_id": pessoa_id,
+                    "tipo_usuario": tipo_usuario,
+                    "acusador_id": acusador_id
+                }
+            )
+
+
+
+
+        except Exception as e:
+            print(f"Erro: {e}", file=sys.stderr)
+
 
     def insert_complaint(self, acusador_id: int):
+        if not acusador_id:
+            print("acusador_id não informado.", file=sys.stderr)
+
         try:
             print("\n=== Cadastro de Denúncias ===")
 
-            use_address = input("Deseja informar endereço? [s/n]: ")
+            use_address = input("Deseja informar endereço do acusado? [s/n]: ")
             endereco_id = None
 
             if use_address and use_address.lower().startswith('s'):
