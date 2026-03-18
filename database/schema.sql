@@ -74,10 +74,10 @@ CREATE TABLE IF NOT EXISTS prefeituras (
 
 CREATE TABLE IF NOT EXISTS gestores (
     "gestor_id" INTEGER GENERATED ALWAYS AS IDENTITY,
-    "prefeitura_id" INTEGER,
-    "usuario_id" INTEGER,
-    "pessoa_id" INTEGER,
-    "status_gestor" VARCHAR,
+    "prefeitura_id" INTEGER NOT NULL,
+    "usuario_id" INTEGER NOT NULL,
+    "pessoa_id" INTEGER NOT NULL,
+    "status_gestor" VARCHAR NOT NULL,
 
     PRIMARY KEY ("gestor_id"),
 
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS gestores (
 CREATE TABLE IF NOT EXISTS mediadores (
     "mediador_id" INTEGER GENERATED ALWAYS AS IDENTITY,
     "pessoa_id" INTEGER NOT NULL,
-    "usuario_id" INTEGER NOT NULL,
+    "usuario_id" INTEGER,
     "prefeitura_id" INTEGER NOT NULL,
     "status_mediador" VARCHAR NOT NULL,
 
