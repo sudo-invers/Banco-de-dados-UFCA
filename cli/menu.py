@@ -1,6 +1,7 @@
 import sys
 from cli.commands.cli_insert_commands import CLIInsertCommand
 from cli.commands.cli_query_commands import CLIQueryCommand
+from cli.commands.cli_update_commands import CLIUpdateCommand
 from cli.curr_user import user
 
 
@@ -12,6 +13,7 @@ class CLIMenu:
         # Instanciamos as classes apenas uma vez na inicialização
         self.insert_cmd = CLIInsertCommand()
         self.query_cmd = CLIQueryCommand()
+        self.update_cmd = CLIUpdateCommand()
 
     def menu_principal(self):
         while True:
@@ -49,6 +51,7 @@ class CLIMenu:
             print("\n=== MENU LOGIN ===")
             print("1 - Cadastrar usuário")
             print("2 - Fazer Login")
+            print("3 - Mudar dados pessoais")
             print("0 - Voltar")
 
             opcao = input("Escolha uma opção: ").strip()
@@ -57,6 +60,8 @@ class CLIMenu:
                 self.insert_cmd.insert_user(tipo_usuario='ACUSADOR')
             elif opcao == "2":
                 self.query_cmd.cli_query_login()
+            elif opcao == "3":
+                self.update_cmd.cli_update_person()
             elif opcao == "0":
                 break
             else:
@@ -164,12 +169,15 @@ class CLIMenu:
         while True:
             print("\n=== MENU ACORDOS ===")
             print("1 - Cadastrar acordo")
+            print("2 - Alterar dados do acordo (data / status)")
             print("0 - Voltar")
 
             opcao = input("Escolha uma opção: ").strip()
 
             if opcao == "1":
                 self.insert_cmd.insert_agreement()
+            elif opcao == "2":
+                self.update_cmd.cli_update_agreement()
             elif opcao == "0":
                 break
             else:
