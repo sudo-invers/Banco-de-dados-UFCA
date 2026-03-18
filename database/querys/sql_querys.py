@@ -67,7 +67,11 @@ class SQLQuery:
                 u.email,
                 u.tipo_usuario,
                 a.acusador_id,
-                p.pessoa_id
+                p.pessoa_id,
+                p.nome,
+                p.telefone,
+                p.n_inscricao_tributaria,
+                p.data_nascimento
             FROM usuarios u
                 LEFT JOIN acusadores a ON u.usuario_id = a.usuario_id
                 LEFT JOIN pessoas p ON a.pessoa_id = p.pessoa_id
