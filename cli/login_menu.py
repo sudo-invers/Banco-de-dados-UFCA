@@ -26,7 +26,7 @@ class LoginMenu:
         Menu de login
         """
         while True:
-            print("\n=== LOGIN ===")
+            print("\n=== LOGIN POSTGRES ===")
             print("1 - Entrar")
             print("2 - Utilizar ultimo login")
             print("0 - Sair")

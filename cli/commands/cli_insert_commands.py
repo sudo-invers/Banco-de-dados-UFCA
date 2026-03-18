@@ -103,7 +103,8 @@ class CLIInsertCommand:
 
     def insert_complaint(self, acusador_id: int):
         if not acusador_id:
-            print("acusador_id não informado.", file=sys.stderr)
+            print("Err: acusador_id não informado.\n(possivelmente por que você não está logado)", file=sys.stderr)
+            return
 
         try:
             print("\n=== Cadastro de Denúncias ===")
@@ -164,7 +165,7 @@ class CLIInsertCommand:
                 pessoa_id=pessoa_id,
                 usuario_id=None,
                 prefeitura_id=prefeitura_id,
-                status_mediador="ativo"
+                status_mediador="ATIVO"
             )
 
             if mediador_id:

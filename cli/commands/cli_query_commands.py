@@ -37,7 +37,7 @@ class CLIQueryCommand:
                 "email": usuario_data.get("email"),
                 "pessoa_id": usuario_data.get("pessoa_id"),
                 "tipo_usuario": usuario_data.get("tipo_usuario"),
-                "id_acusador": usuario_data.get("acusador_id")
+                "acusador_id": usuario_data.get("acusador_id")
             }
         )
 

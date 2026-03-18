@@ -3,7 +3,7 @@ user: dict = {
     "pessoa_id": None,
     "email": None,
     "tipo_usuario": None,
-    "id_acusador": None
+    "acusador_id": None
 }
 
 def set_user(data: dict) -> None:
