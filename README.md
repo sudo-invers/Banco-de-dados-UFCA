@@ -230,7 +230,7 @@ estruturar as informações;
 
 [Clique aqui para acessar o Modelo Conceitual](https://lucid.app/lucidspark/b70cc641-59a2-40bb-931c-fe3e7eaa2408/edit?viewport_loc=-1382%2C-496%2C4656%2C2213%2C0_0&invitationId=inv_30809952-c4bf-4a87-bb95-0981bc8d1def)
 
-[Clique aqui para acessar o Diagrama Entidade Relacionamento](https://lucid.app/lucidchart/efd61ff3-02be-4ed6-9d89-67cfc7a42c0c/edit?viewport_loc=-64%2C410%2C1839%2C863%2C0_0&invitationId=inv_8327bd62-0403-4cbb-915e-dfe4ebe423df)
+[Clique aqui para acessar o Diagrama Entidade Relacionamento](https://lucid.app/lucidchart/bcb44d76-1f22-46a8-8532-32df7a71188b/edit?viewport_loc=-2042%2C-1392%2C2498%2C1202%2C0_0&invitationId=inv_1efd0087-3f3d-479d-9979-f2735bca422a)
 
 [Clique aqui para acessar o Modelo Entidade Relacionamento extendido](https://drive.google.com/file/d/1e1AdAOSJA3Ejn_RfgWzc1QXw4T7juhIS/view?usp=drive_link)
 
@@ -240,4 +240,3 @@ estruturar as informações;
 # Commits no liveshare
 
 git commit -m "Co-authored-by: Dorian Dayvid Gomes Feitosa <OtherDinosaur@users.noreply.github.com>"
-
