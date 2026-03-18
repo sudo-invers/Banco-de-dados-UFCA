@@ -1,196 +1,67 @@
 from database.connect import ConnectDatabase
-from functools import wraps
-
-# connect = ConnectDatabase()
-
-# consultas parametrizadas
-# Consultar quantidade de denuncias por periodo
 
 
-def decor(fn):
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        # depois
-        result = func(*args, **kwargs)
-        # depois
-        return result
-
-    return wrapper
-
-
-@decor
-def func():
-    return "oi"
-
-
-class QueryComplaintOfDate:
-    def __init__(self, data):
-        self.sql_date_complaint = """SELECT * FROM DENUNCIA WHERE data = %s"""
-        self.date_parameter = data
-
-    def con(self) -> list[tuple]:
-        ConnectDatabase().cur.execute(self.sql_date_complaint, (self.date_parameter,))
-        self.query = ConnectDatabase().cur.fetchall()
-        ConnectDatabase().close()
-        return self.query
-
-
-# Consultar denuncias com mesma causa
-class QueryComplaintCause:
-    def __init__(self, cause):
-        self.sql_cause_complaint = """SELECT * FROM DENUNCIA WHERE causa = %s"""
-        self.cause_complaint = cause
-
-    def con(self) -> list[tuple]:
-        ConnectDatabase().cur.execute(
-            self.sql_cause_complaint, (self.sql_cause_complaint,)
-        )
-        self.query = ConnectDatabase().cur.fetchall()
-        ConnectDatabase().close()
-        return self.query
-
-
-# Consultar denucias com mesma causa no periodo específico
-class QueryComplaintCausePeriod:
-    def __init__(self, causa, data_ini, data_fim):
-        self.sql_cause_period_complaint = """SELECT * FROM DENUNCIA 
-        WHERE causa = %s AND (data_denuncia >= %s AND data_denuncia <= %s)"""
-        self.cause_complaint = causa
-        self.data_ini = data_ini
-        self.data_fim = data_fim
-
-    def con(self) -> list[tuple]:
-        ConnectDatabase().cur.execute(
-            self.sql_cause_period_complaint,
-            (self.cause_complaint, self.data_ini, self.data_fim),
-        )
-        self.query = ConnectDatabase().cur.fetchall()
-        ConnectDatabase().close()
-        return self.query
-
-
-# Consultar denuncias com o meu nome: acusado
-class QueryComplaintAccusedName:
-    def __init__(self, name):
-        self.sql_accused_id_search = (
-            """SELECT acusado_id FROM ACUSADO WHERE nome = %s"""
-        )
-        self.sql_accused_complaint = """SELECT * FROM DENUNCIA WHERE acusado_id = %s"""
-        self.name_parameter = name
-
-    def con(self):
-        ConnectDatabase().cur.execute(
-            self.sql_accused_id_search, (self.name_parameter,)
-        )
-        self.id_accused = ConnectDatabase().cur.fetchone()
-        ConnectDatabase().cur.execute(self.sql_accused_complaint, (self.id_accused[0],))
-        self.query = ConnectDatabase().cur.fetchall()
-        ConnectDatabase().close()
-        return self.query
-
-
-# Consultar mediadores da minha cidade - sem exibir dados sensiveis
-class QueryMediatorCity:
-    def __init__(self, city):
-        self.sql_city_address_city_hall = """
-                SELECT prefeitura_id
-                FROM ENDERECO JOIN PREFEITURA
-                    ON ENDERECO.endereco_id = PREFEITURA.endereco_id
-                WHERE cidade = %s
-                """
-        self.sql_city_hall_mediator_user = """
-                SELECT PESSOA.nome 
-                FROM MEDIADOR JOIN PESSOA 
-                    ON MEDIADOR.pessoa_id = PESSOA.pessoa_id
-                WHERE status_mediador = 'ATIVO' AND prefeitura_id = %s"""
-        self.city = city
-
-    def con(self):
-        ConnectDatabase().cur.execute(self.sql_city_address_city_hall, (self.city,))
-        self.city_address = ConnectDatabase().cur.fetchone()
-        if self.city_address:
-            ConnectDatabase().cur.execute(
-                self.sql_city_hall_mediator_user, (self.city_address[0],)
-            )
-            self.query = ConnectDatabase().cur.fetchall()
-            return self.query
-        else:
-            return []
-
-
-# Consultar audiencias realizadas em determinado periodo e local
-class QueryAudienceAtDateAndPlace:
-    def __init__(self, date, place):
-        self.sql_audience_date_place = (
-            """SELECT * FROM AUDIENCIA WHERE data = %s AND local = %s"""
-        )
-        self.date_parameter = date
-        self.place_parameter = place
-
-    def con(self) -> list[tuple]:
-        ConnectDatabase().cur.execute(
-            self.sql_audience_date_place,
-            (self.date_parameter, self.place_parameter),
-        )
-        self.query = ConnectDatabase().cur.fetchall()
-        ConnectDatabase().close()
-        return self.query
-
-
-# Consultar audiencias que nao tiveram acordo
-class QueryAudienceWithoutAgreement:
+class Querys:
     def __init__(self):
-        self.sql_audience_without_agreement = """
-            SELECT audiencia_id
-            FROM ACORDO
-            WHERE status_acordo = "conflito"
-            """
+        self.conn = ConnectDatabase()
+        self.conn.conectar()
 
-    def con(self) -> list[tuple]:
-        ConnectDatabase().cur.execute(self.sql_audience_without_agreement)
-        self.query = ConnectDatabase().cur.fetchall()
-        ConnectDatabase().close()
-        return self.query
+    def query_complaint_of_date(self, data):
+        sql = """SELECT * FROM denuncia WHERE data = %s"""
+        dados = (data,)
+        return self.conn.get(sql, dados)
 
+    def query_complaint_cause(self, cause):
+        sql = """SELECT * FROM denuncia WHERE causa = %s"""
+        dados = (cause,)
+        return self.conn.get(sql, dados)
 
-# Consultar denuncias que nao tiveram audiencia
-class QueryComplaintWithoutAudience:
-    def __init__(self):
-        self.sql_complaint_without_audience = """
-            SELECT audiencia_id
-            FROM DENUNCIA
-            WHERE audiencia_id = NULL
-            """
+    def query_complaint_cause_period(self, causa, data_ini, data_fim):
+        sql = """SELECT * FROM DENUNCIA 
+                 WHERE causa = %s AND (data_denuncia >= %s AND data_denuncia <= %s)"""
+        dados = (causa, data_ini, data_fim)
+        return self.conn.get(sql, dados)
 
-    def con(self) -> list[tuple]:
-        ConnectDatabase().cur.execute(self.sql_complaint_without_audience)
-        self.query = ConnectDatabase().cur.fetchall()
-        ConnectDatabase().close()
-        return self.query
+    def query_complaint_accused_name(self, name):
+        sql = """SELECT d.* FROM DENUNCIA d
+                 JOIN ACUSADO a ON d.acusado_id = a.acusado_id
+                 WHERE a.nome = %s"""
+        dados = (name,)
+        return self.conn.get(sql, dados)
 
+    def query_mediator_city(self, city):
+        sql = """SELECT PESSOA.nome 
+                 FROM MEDIADOR 
+                 JOIN PESSOA ON MEDIADOR.pessoa_id = PESSOA.pessoa_id
+                 JOIN PREFEITURA ON MEDIADOR.prefeitura_id = PREFEITURA.prefeitura_id
+                 JOIN ENDERECO ON PREFEITURA.endereco_id = ENDERECO.endereco_id
+                 WHERE ENDERECO.cidade = %s AND MEDIADOR.status_mediador = 'ATIVO'"""
+        dados = (city,)
+        return self.conn.get(sql, dados)
 
-# Consultar locais com mais denuncias registradas
+    def query_audience_at_date_and_place(self, date, place):
+        sql = """SELECT * FROM AUDIENCIA WHERE data = %s AND local = %s"""
+        dados = (date, place)
+        return self.conn.get(sql, dados)
 
+    def query_audience_without_agreement(self):
+        sql = """SELECT audiencia_id FROM ACORDO WHERE status_acordo = 'conflito'"""
+        return self.conn.get(sql, None)
 
-# Consultar prefeituras disponíveis - que usam o sistema
-class QueryTownHalls:
-    def __init__(self):
-        self.sql_town_hall = """SELECT * FROM PREFEITURA"""
+    def query_complaint_without_audience(self):
+        sql = """SELECT denuncia_id FROM DENUNCIA WHERE audiencia_id IS NULL"""
+        return self.conn.get(sql, None)
 
-    def con(self) -> list[tuple]:
-        ConnectDatabase().cur.execute(self.sql_town_hall)
-        self.query = ConnectDatabase().cur.fetchall()
-        ConnectDatabase().close()
-        return self.query
+    def query_town_halls(self):
+        sql = """SELECT * FROM PREFEITURA"""
+        return self.conn.get(sql, None)
 
+    def query_audience_for_accuser(self, accuser_id):
+        sql = """SELECT * FROM AUDIENCIA WHERE acusador_id = %s"""
+        dados = (accuser_id,)
+        return self.conn.get(sql, dados)
 
-# Consultar audiencias que estão marcadas para acusador / acusado / mediador
-class QueryAudienceForAccuser:
-    def __init__(self, accuser_id):
-        pass
-
-
-# Consultar audiencias que estão marcadas para acusado
-class QueryAudienceForAccused:
-    def __init__(self, accused_id):
-        pass
+    def query_audience_for_accused(self, accused_id):
+        sql = """SELECT * FROM AUDIENCIA WHERE acusado_id = %s"""
+        dados = (accused_id,)
+        return self.conn.get(sql, dados)

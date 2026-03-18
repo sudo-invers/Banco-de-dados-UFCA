@@ -28,7 +28,7 @@ class LoginMenu:
                 menuCLI().menu_principal()
                 break
             elif opcao == 2:
-                self.__last_login()
+                self.__init_db()
                 menuCLI().menu_principal()
             elif opcao == 0:
                 break
@@ -53,9 +53,10 @@ class LoginMenu:
                 toml.dump(config, f)
 
             print("Conectando ao banco de dados")
+            self.__init_db(nome, senha)
 
-    def __last_login(self):
+    def __init_db(self, name=None, password=None):
         db = ConnectDatabase()
-        db.conectar(None, None)
+        db.conectar(name, password)
         db.inicializar_schema()
         return db

@@ -88,6 +88,7 @@ class menuCLI:
             print("4 - Consultar denucias com mesma causa no mesmo periodo")
             print("5 - Consultar denuncias com o meu nome: acusado")
             print("6 - Consultar denuncias que não tiveram audiência")
+            print("7 - Atualizar id da audiencia")
             print("0 - Sair")
             opcao_denuncia = input("Escolha uma opção: ")
             if opcao_denuncia == "1":
