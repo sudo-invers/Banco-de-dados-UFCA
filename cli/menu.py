@@ -1,288 +1,171 @@
-from cli.commands.cli_insert_commands import InsertCommandCLI
-from cli.commands.cli_query_commands import QueryCommand
+import sys
+from cli.commands.cli_insert_commands import CLIInsertCommand
+from cli.commands.cli_query_commands import CLIQueryCommand
+
+usuario: dict = {
+    "usuario_id": None,
+    "pessoa_id": None,
+    "email": None,
+    "senha": None,
+    "tipo_usuario": None
+}
 
 
-class menuCLI:
+
+class CLIMenu:
+    """Menu interativo para navegação na CLI."""
+
     def __init__(self):
-        pass
+        # Instanciamos as classes apenas uma vez na inicialização
+        self.insert_cmd = CLIInsertCommand()
+        self.query_cmd = CLIQueryCommand()
 
     def menu_principal(self):
         while True:
-            print("\n=== MENU ===")
-            print("1 - Acusado")
-            print("2 - Acusador")
-            print("3 - Acordo")
-            print("4 - Audiência")
-            print("5 - Denuncia")
-            print("6 - Endereço")
-            print("7 - Mediador")
-            print("8 - Prefeitura")
-            print("9 - Pessoa")
-            print("10 - Usuário")
+            print("\n=== MENU PRINCIPAL ===")
+            print("1 - Login")
+            print("2 - Denúncias")
+            print("3 - Audiências")
+            print("4 - Prefeituras")
+            print("5 - Acordos")
+            print("6 - Mediadores")
             print("0 - Sair")
 
             opcao = input("Escolha uma opção: ").strip()
 
             if opcao == "1":
-                self.menu_acusado()
-
+                self.menu_login()
             elif opcao == "2":
-                self.menu_acusador()
-
-            elif opcao == "3":
-                self.menu_acordo()
-
-            elif opcao == "4":
-                self.menu_audiencia()
-
-            elif opcao == "5":
                 self.menu_denuncias()
-
-            elif opcao == "6":
-                self.menu_endereco()
-
-            elif opcao == "7":
-                self.menu_mediador()
-
-            elif opcao == "8":
+            elif opcao == "3":
+                self.menu_audiencia()
+            elif opcao == "4":
                 self.menu_prefeitura()
-
-            elif opcao == "9":
-                self.menu_pessoa()
-
-            elif opcao == "10":
-                self.menu_usuario()
-
+            elif opcao == "5":
+                self.menu_acordo()
+            elif opcao == "6":
+                self.menu_mediador()
             elif opcao == "0":
+                print("Saindo do sistema...")
                 break
-
             else:
-                print("Opção inválida!")
-                continue
+                print("Opção inválida! Tente novamente.")
 
-    def menu_acusado(self):
-        while True:
-            print("\n=== MENU ===")
-            print("1 - Inserir Acusado")
-            print("0 - Sair")
-
-            opcao_acusado = (input("Escolha uma opção: ")).strip()
-
-            if opcao_acusado == "1":
-                op = InsertCommandCLI()
-                op.insert_accused()
-
-            elif opcao_acusado == "0":
-                break
-
-            else:
-                print("Opção inválida!")
-                continue
+    def menu_login(self):
+        pass
 
     def menu_denuncias(self):
         while True:
-            print("\n=== MENU ===")
+            print("\n=== MENU DENÚNCIAS ===")
             print("1 - Cadastrar denúncia")
-            print("2 - Consultar quantidade de denuncias por periodo")
-            print("3 - Consultar denuncias com mesma causa")
-            print("4 - Consultar denucias com mesma causa no mesmo periodo")
-            print("5 - Consultar denuncias com o meu nome: acusado")
-            print("6 - Consultar denuncias que não tiveram audiência")
-            print("7 - Atualizar id da audiencia")
-            print("0 - Sair")
-            opcao_denuncia = input("Escolha uma opção: ")
-            if opcao_denuncia == "1":
-                consulta = InsertCommandCLI()
-                consulta.insert_complaint()
+            print("2 - Consultar denúncias por data")
+            print("3 - Consultar denúncias por causa")
+            print("4 - Consultar denúncias pelo ID do acusado")
+            print("5 - Consultar denúncias que não tiveram audiência")
+            print("0 - Voltar")
 
-            elif opcao_denuncia == "2":
-                consulta = QueryCommand()
-                consulta.cli_query_complaint_date()
+            opcao = input("Escolha uma opção: ").strip()
 
-            elif opcao_denuncia == "3":
-                consulta = QueryCommand()
-                consulta.cli_query_complaint_cause()
-
-            elif opcao_denuncia == "4":
-                pass
-
-            elif opcao_denuncia == "5":
-                consulta = QueryCommand()
-                consulta.cli_complaint_accused_name()
-
-            elif opcao_denuncia == "6":
-                consulta = QueryCommand()
-                consulta.cli_query_complain_without_audience()
+            if opcao == "1":
+                try:
+                    acusador_id = int(input("Digite o ID do Acusador para esta denúncia: "))
+                    self.insert_cmd.insert_complaint(acusador_id)
+                except ValueError:
+                    print("Erro: O ID do acusador deve ser um número inteiro.", file=sys.stderr)
+            elif opcao == "2":
+                self.query_cmd.cli_query_complaint_date()
+            elif opcao == "3":
+                self.query_cmd.cli_query_complaint_cause()
+            elif opcao == "4":
+                self.query_cmd.cli_complaint_accused_name()
+            elif opcao == "5":
+                self.query_cmd.cli_query_complain_without_audience()
+            elif opcao == "0":
+                break
             else:
                 print("Opção inválida!")
-                continue
 
     def menu_audiencia(self):
         while True:
-            print("\n=== MENU ===")
-            print("1 - Cadastrar audiencia")
-            print("2 - Consultar audiencias realizadas em determinado periodo e local")
-            print("3 - Consultar audiencias que nao tiveram acordo")
-            print(
-                "4 - Consultar audiencias que estão marcadas para acusador / acusado / mediador"
-            )
-            print("5 - Consultar audiencias que estão marcadas para acusado")
-            print("0 - Sair")
-            opcao_audiencia = input("Escolha uma opção: ")
-            if opcao_audiencia == "1":
-                insert = InsertCommandCLI()
-                insert.insert_audience()
+            print("\n=== MENU AUDIÊNCIAS ===")
+            print("1 - Cadastrar audiência")
+            print("2 - Consultar audiências por data e local")
+            print("3 - Consultar audiências que não tiveram acordo")
+            print("4 - Consultar audiências do acusado")
+            print("5 - Consultar audiências do acusador")
+            print("0 - Voltar")
 
-            elif opcao_audiencia == "2":
-                consulta = QueryCommand()
-                consulta.cli_query_audience_date_and_place()
+            opcao = input("Escolha uma opção: ").strip()
 
-            elif opcao_audiencia == "3":
-                consulta = QueryCommand()
-                consulta.cli_query_audience_without_agreement()
-
-            elif opcao_audiencia == "4":
-                pass
-
-            elif opcao_audiencia == "5":
-                pass
-
-            elif opcao_audiencia == "0":
+            if opcao == "1":
+                self.insert_cmd.insert_audience()
+            elif opcao == "2":
+                self.query_cmd.cli_query_audience_date_and_place()
+            elif opcao == "3":
+                self.query_cmd.cli_query_audience_without_agreement()
+            elif opcao == "4":
+                self.query_cmd.cli_query_audience_for_accused()
+            elif opcao == "5":
+                self.query_cmd.cli_query_audience_for_accuser()
+            elif opcao == "0":
                 break
             else:
-                print("Opção inválida")
-                continue
+                print("Opção inválida!")
 
     def menu_mediador(self):
         while True:
-            print("\n=== MENU ===")
+            print("\n=== MENU MEDIADORES ===")
             print("1 - Cadastrar mediador")
-            print(
-                "2- Consultar mediadores da minha cidade - sem exibir dados sensiveis"
-            )
-            print("0 - Sair")
-            opcao_mediador = input("Escolha uma opção: ")
+            print("2 - Consultar mediadores por cidade")
+            print("0 - Voltar")
 
-            if opcao_mediador == "1":
-                consulta = InsertCommandCLI()
-                consulta.insert_medidador()
+            opcao = input("Escolha uma opção: ").strip()
 
-            elif opcao_mediador == "2":
-                consulta = QueryCommand()
+            if opcao == "1":
+                try:
+                    prefeitura_id = int(input("Digite o ID da Prefeitura vinculada: "))
+                    usuario_id = int(input("Digite o ID do Usuário do mediador (ou 0 se não houver): "))
+                    usuario_id = None if usuario_id == 0 else usuario_id
 
-                consulta.cli_query_mediator_city()
-            elif opcao_mediador == "0":
+                    self.insert_cmd.insert_mediator(prefeitura_id, usuario_id)
+                except ValueError:
+                    print("Erro: IDs devem ser números inteiros.", file=sys.stderr)
+            elif opcao == "2":
+                self.query_cmd.cli_query_mediator_city()
+            elif opcao == "0":
                 break
-
             else:
                 print("Opção inválida!")
-                continue
-
-    def menu_pessoa(self):
-        while True:
-            print("\n=== MENU ===")
-            print("1 - Cadastrar pessoa")
-            print("0 - Sair")
-            opcao_pessoa = (input("Escolha uma opção: ")).strip()
-
-            if opcao_pessoa == "1":
-                consulta = InsertCommandCLI()
-                consulta.insert_pessoa()
-
-            elif opcao_pessoa == "0":
-                break
-
-            else:
-                return "Opção Inválida!"
-
-    def menu_acusador(self):
-        while True:
-            print("\n=== MENU ===")
-            print("1 - Cadastrar acusador")
-            print("0 - Sair")
-            opcao_acusador = (input("Escolha uma opção: ")).strip()
-
-            if opcao_acusador == "1":
-                consulta = InsertCommandCLI()
-                consulta.insert_accuser()
-
-            elif opcao_acusador == "0":
-                break
-
-            else:
-                return "Opção Inválida!"
-
-    def menu_endereco(self):
-        while True:
-            print("\n=== MENU ===")
-            print("1 - Cadastrar endereco")
-            print("0 - Sair")
-            opcao_endereco = (input("Escolha uma opção: ")).strip()
-
-            if opcao_endereco == "1":
-                consulta = InsertCommandCLI()
-                consulta.insert_adress()
-
-            elif opcao_endereco == "0":
-                break
-
-            else:
-                print("Opção inválida!")
-                continue
 
     def menu_prefeitura(self):
         while True:
-            print("\n=== MENU ===")
+            print("\n=== MENU PREFEITURAS ===")
             print("1 - Cadastrar prefeitura")
-            print("1 - Consultar prefeituras disponíveis - que usam o sistema")
-            print("0 - Sair")
-            opcao_prefeitura = (input("Escolha uma opção: ")).strip()
+            print("2 - Consultar prefeituras cadastradas no sistema")
+            print("0 - Voltar")
 
-            if opcao_prefeitura == "1":
-                pass
+            opcao = input("Escolha uma opção: ").strip()
 
-            elif opcao_prefeitura == "0":
-                consulta = QueryCommand()
-                consulta.cli_town_halls()
-
-            elif opcao_prefeitura == "0":
+            if opcao == "1":
+                self.insert_cmd.insert_cityhall()
+            elif opcao == "2":
+                self.query_cmd.cli_city_halls()
+            elif opcao == "0":
                 break
-
             else:
                 print("Opção inválida!")
-                continue
 
     def menu_acordo(self):
         while True:
-            print("\n=== MENU ===")
+            print("\n=== MENU ACORDOS ===")
             print("1 - Cadastrar acordo")
-            print("0 - Sair")
-            opcao_acordo = input("Escolha uma opção: ")
+            print("0 - Voltar")
 
-            if opcao_acordo == "1":
-                consulta = InsertCommandCLI()
-                consulta.insert_agreement()
+            opcao = input("Escolha uma opção: ").strip()
 
-            elif opcao_acordo == "0":
+            if opcao == "1":
+                self.insert_cmd.insert_agreement()
+            elif opcao == "0":
                 break
-
-            else:
-                return "Opção Inválida!"
-
-    def menu_usuario(self):
-        while True:
-            print("\n=== MENU ===")
-            print("1 - Cadastrar usuário")
-            print("0 - Sair")
-            opcao_usuario = input("Escolha uma opção: ")
-
-            if opcao_usuario == "1":
-                consulta = InsertCommandCLI()
-                consulta.insert_usuario()
-
-            elif opcao_usuario == "0":
-                break
-
             else:
                 print("Opção inválida!")
-                continue

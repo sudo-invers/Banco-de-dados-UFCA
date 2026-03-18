@@ -1,6 +1,8 @@
+from getpass import getpass
+
 import toml
 
-from cli.menu import menuCLI
+from cli.menu import CLIMenu
 from database.connect import ConnectDatabase
 
 
@@ -25,11 +27,11 @@ class LoginMenu:
 
             elif opcao == 1:
                 self.__login()
-                menuCLI().menu_principal()
+                CLIMenu().menu_principal()
                 break
             elif opcao == 2:
                 self.__init_db()
-                menuCLI().menu_principal()
+                CLIMenu().menu_principal()
             elif opcao == 0:
                 break
 
@@ -41,7 +43,7 @@ class LoginMenu:
             if nome.strip() == "":
                 print("Nome nao pode ser vazio")
                 break
-            senha = input("Senha: ")
+            senha = getpass("Senha: ")
             if senha.strip() == "":
                 print("Senha nao pode ser vazia")
                 break
