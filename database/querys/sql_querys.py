@@ -20,6 +20,80 @@ class SQLQuery:
         self.conn = ConnectDatabase()
         self.conn.conectar()
 
+    def get_password_by_email(self, email: str) -> str | None:
+        """
+        Retorna a senha de um usuário pelo email.
+
+        Args:
+            email (str): Email do usuário.
+
+        Returns:
+            str: Senha do usuário.
+            None: Se o usuário não existir ou houver erro.
+        """
+        sql_select: str = """
+            SELECT senha
+            FROM usuarios
+            WHERE email = %s
+        """
+        dados: tuple = (email,)
+
+        result = self.conn.get(sql_select, dados)
+
+        if result and len(result) > 0:
+            return result[0][0]
+
+        return None
+
+    def get_user_by_email(self, email: str) -> dict | None:
+        """
+        Busca um usuário pelo email, trazendo dados de:
+            - usuarios
+            - acusadores (se existir)
+            - pessoas (dados pessoais)
+
+        Args:
+            email (str): Email do usuário
+
+        Returns:
+            dict: Dados do usuário com chaves:
+                usuario_id, email, tipo_usuario,
+                acusador_id, pessoa_id, nome, telefone, n_inscricao_tributaria, data_nascimento
+            None: Se não encontrado ou erro
+        """
+        sql_select: str = """
+            SELECT 
+                u.usuario_id,
+                u.email,
+                u.tipo_usuario,
+                a.acusador_id,
+                p.pessoa_id
+            FROM usuarios u
+                LEFT JOIN acusadores a ON u.usuario_id = a.usuario_id
+                LEFT JOIN pessoas p ON a.pessoa_id = p.pessoa_id
+            WHERE u.email = %s
+        """
+        dados: tuple = (email,)
+
+        result = self.conn.get(sql_select, dados)
+
+        if result:
+            # retorna como dicionário usando a primeira linha encontrada
+            row = result[0]
+            return {
+                "usuario_id": row[0],
+                "email": row[1],
+                "tipo_usuario": row[2],
+                "acusador_id": row[3],
+                "pessoa_id": row[4],
+                "nome": row[5],
+                "telefone": row[6],
+                "n_inscricao_tributaria": row[7],
+                "data_nascimento": row[8],
+            }
+
+        return None
+
     def get_complaint_of_date(self, data_denuncia: date) -> list[tuple] | None:
         """
         Busca denúncias realizadas em uma data específica.
