@@ -1,131 +1,218 @@
+import sys
+from datetime import datetime, date
 from database.querys.sql_inserts import SQLInsertion
+from database.querys.sql_updates import SQLUpdate
 
 
 class CLIInsertCommand:
-    """Classe 'CommandInserCLI' mostra os atributos que o usuário deve digitar na CLI para cadastrar os dados desejados, por meio
-    de chamadas às funções de database."""
-
+    """
+    A classe ´CommandInsertCLI´ mostra os atributos que o usuário
+    deve digitar na CLI para cadastrar os dados desejados,
+    por meio de chamadas às funções de database.
+    """
     def __init__(self):
         self.repo = SQLInsertion()
+        self.update_repo = SQLUpdate()
 
-    def insert_accused(self):
-        pessoa_id = int(input("Digite o ID da pessoa: "))
-        try:
-            insercao = InsertAccused(pessoa_id)
-            insercao.insert()
-        except Exception as e:
-            print("Erro ao cadastrar acusado:", e)
+    def _input_date(self, mensagem: str, obrigatorio: bool = True):
+        data_input = input(mensagem)
+        if not data_input and not obrigatorio:
+            return None
+        return datetime.strptime(data_input, "%Y-%m-%d").date()
 
-    def insert_adress(self):
-        rua = (input("Rua: ")).strip()
-        bairro = (input("Bairro: ")).strip()
-        cidade = (input("Cidade: ")).strip()
-        numero = input("Numero: ")
-        try:
-            self.sert.insert_adress(rua, bairro, cidade, numero)
-            return f"endereco: \n rua: {rua} \n bairro: {bairro} \n cidade: {cidade} \n numero: {numero}"
-        except Exception as e:
-            print("Erro ao cadastrar endereco:", e)
+    def _create_address(self) -> int | None:
+        print("\n=== Endereço ===")
+        cidade = input("Cidade: ")
+        bairro = input("Bairro: ")
+        rua = input("Rua: ")
+        numero = input("Número: ")
 
-    def insert_accuser(self):
-        print("\n=== Cadastro de Acusador ===")
-        pessoa_id = int(input("pessoa_id: "))
-        usuario_id = int(input("usuario_id: "))
+        endereco_id = self.repo.insert_address(
+            cidade=cidade,
+            bairro=bairro,
+            rua=rua,
+            numero=numero,
+        )
+
+        if not endereco_id:
+            print("Erro ao cadastrar endereço", file=sys.stderr)
+
+        return endereco_id
+
+    def _create_person(self, obrigatorio=True, endereco_id=None) -> int | None:
+        nome = input("Nome: ")
+
+        data_nascimento = self._input_date(
+            "Data de nascimento (YYYY-MM-DD): ",
+            obrigatorio=obrigatorio
+        )
+
+        telefone = input("Telefone: ") or None
+        documento = input("CPF/CNPJ: ") or None
+
+        pessoa_id = self.repo.insert_people(
+            nome=nome,
+            data_nascimento=data_nascimento,
+            telefone=telefone,
+            n_inscricao_tributaria=documento,
+            endereco_id=endereco_id
+        )
+
+        if not pessoa_id:
+            print("Erro ao cadastrar pessoa", file=sys.stderr)
+
+        return pessoa_id
+
+
+    def insert_complaint(self, acusador_id: int):
         try:
-            inserscao = InsertAccuser(pessoa_id, usuario_id)
-            inserscao.insert()
+            print("\n=== Cadastro de Denúncias ===")
+
+            use_address = input("Deseja informar endereço? [s/n]: ")
+            endereco_id = None
+
+            if use_address and use_address.lower().startswith('s'):
+                endereco_id = self._create_address()
+                if not endereco_id:
+                    return
+
+            pessoa_id = self._create_person(obrigatorio=False, endereco_id=endereco_id)
+            if not pessoa_id:
+                return
+
+            acusado_id = self.repo.insert_accused(pessoa_id)
+            if not acusado_id:
+                print("Erro ao cadastrar acusado", file=sys.stderr)
+                return
+
+            causa = input("Causa da denúncia: ")
+            detalhamento = input("Detalhamento: ") or None
+
+            data = self._input_date("Data (YYYY-MM-DD): ")
+
+            result = self.repo.insert_complaint(
+                audiencia_id=None,
+                acusador_id=acusador_id,
+                acusado_id=acusado_id,
+                causa_denuncia=causa,
+                detalhamento=detalhamento,
+                data=data
+            )
+
+            if result:
+                print(f"Denúncia cadastrada com ID {result}")
+            else:
+                print("Erro ao cadastrar denúncia", file=sys.stderr)
+
         except Exception as e:
-            print("Erro ao cadastrar acusador:", e)
+            print(f"Erro: {e}", file=sys.stderr)
+
+
+    def insert_mediator(self, prefeitura_id: int, usuario_id: int):
+        try:
+            print("\n=== Cadastro de Mediador ===")
+
+            endereco_id = self._create_address()
+            if not endereco_id:
+                return
+
+            pessoa_id = self._create_person(endereco_id=endereco_id)
+            if not pessoa_id:
+                return
+
+            mediador_id = self.repo.insert_mediator(
+                pessoa_id=pessoa_id,
+                usuario_id=None,
+                prefeitura_id=prefeitura_id,
+                status_mediador="ativo"
+            )
+
+            if mediador_id:
+                print(f"Mediador cadastrado com ID {mediador_id}")
+            else:
+                print("Erro ao cadastrar mediador", file=sys.stderr)
+
+        except Exception as e:
+            print(f"Erro: {e}", file=sys.stderr)
 
     def insert_audience(self):
-        print("\n=== Cadastro de Audiência ===")
-        id_mediador = int(input("Id do mediador: "))
-        id_endereco = int(input("Id do endereco: "))
-        status_audiencia = input("status da audiencia: ")
-        data = input("data da audiencia (AAAA-MM-DD): ")
         try:
-            inserscao = InsertAudience(id_mediador, id_endereco, status_audiencia, data)
-            inserscao.insert()
+            print("\n=== Cadastro de Audiência ===")
+
+            denuncia_id = int(input("ID da denúncia: "))
+            mediador_id = int(input("ID do mediador: "))
+
+            data = self._input_date("Data da audiência (YYYY-MM-DD): ")
+
+            endereco_id = self._create_address()
+            if not endereco_id:
+                return
+
+            audiencia_id = self.repo.insert_audience(
+                mediador_id=mediador_id,
+                endereco_id=endereco_id,
+                status_audiencia='AGENDADA',
+                data=data
+            )
+
+            if not audiencia_id:
+                print("Erro ao cadastrar audiência", file=sys.stderr)
+                return
+
+            updated = self.update_repo.update_complaint_on_audience(
+                complaint_id=denuncia_id,
+                audience_id=audiencia_id
+            )
+
+            if not updated:
+                print("Erro ao vincular audiência com denúncia", file=sys.stderr)
+
         except Exception as e:
-            print("Erro ao cadastrar audiencia:", e)
+            print(f"Erro: {e}", file=sys.stderr)
+
+    def insert_cityhall(self):
+        try:
+            print("\n=== Cadastro de Prefeitura ===")
+
+            endereco_id = self._create_address()
+            if not endereco_id:
+                return
+
+            cnpj = input("CNPJ: ")
+
+            prefeitura_id = self.repo.insert_cityhall(
+                endereco_id=endereco_id,
+                cnpj=cnpj
+            )
+
+            if prefeitura_id:
+                print(f"Prefeitura cadastrada com ID {prefeitura_id}")
+            else:
+                print("Erro ao cadastrar prefeitura", file=sys.stderr)
+
+        except Exception as e:
+            print(f"Erro: {e}", file=sys.stderr)
 
     def insert_agreement(self):
-        print("\n=== Cadastro de Acusador ===")
-        audiencia_id = int(input("id da audiencia: "))
-        status_acordo = input("status do acordo: ")
-        data_acordo = input("data do acordo (AAAA-MM-DD): ")
         try:
-            inserscao = InsertAgreement(audiencia_id, status_acordo, data_acordo)
-            inserscao.insert()
-        except Exception as e:
-            print("Erro ao cadastrar acordo:", e)
+            print("\n=== Cadastro de Acordo ===")
 
-    def insert_complaint(self):
-        print("\n=== Cadastro de Denúncia ===")
-        audiencia_id = int(input("id da audiencia: "))
-        acusador_id = int(input("Id do endereco: "))
-        acusado_id = int(input("Id do endereco: "))
-        causa_denuncia = input("status da audiencia: ")
-        detalhamento = input("status da audiencia: ")
-        data = input("data: ")
-        try:
-            inserscao = InsertComplaint(
-                audiencia_id,
-                acusador_id,
-                acusado_id,
-                causa_denuncia,
-                detalhamento,
-                data,
+            audiencia_id = int(input("ID da audiência: "))
+
+            status = input("Status do acordo: ")
+
+            data_acordo = self._input_date("Data do acordo (YYYY-MM-DD): ")
+
+            acordo_id = self.repo.insert_agreement(
+                audiencia_id=audiencia_id,
+                status_acordo=status,
+                data_acordo=data_acordo
             )
-            inserscao.insert()
-        except Exception as e:
-            return "Erro ao cadastrar denúncia:", e
 
-    def insert_gestor(self):
-        print("\n=== Cadastro de Gestor ===")
-        pessoa_id = int(input("Id da pessoa: "))
-        usuario_id = int(input("Id do usuario: "))
-        prefeitura_id = int(input("Id da prfeitura: "))
-        status = input("status do gestor: ")
-
-        try:
-            insercao = InsertGestor(pessoa_id, usuario_id, prefeitura_id, status)
-            insercao.insert()
+            if acordo_id:
+                print(f"Acordo cadastrado com ID {acordo_id}")
+            else:
+                print("Erro ao cadastrar acordo", file=sys.stderr)
 
         except Exception as e:
-            return "Erro ao cadastrar gestor:", e
-
-    def insert_medidador(self):
-        print("\n=== Cadastro de Audiência ===")
-        pessoa_id = int(input("Id da pessoa: "))
-        usuario_id = int(input("Id do usuario: "))
-        prefeitura_id = int(input("Id da prfeitura: "))
-        status = input("status do gestor: ")
-        try:
-            insercao = InsertMediator(pessoa_id, usuario_id, prefeitura_id, status)
-            insercao.insert()
-        except Exception as e:
-            return "Erro ao cadastrar mediador:", e
-
-    def insert_pessoa(self):
-        print("\n=== Cadastro de Pessoa ===")
-        id = input("ID: ")
-        nome = input("Nome: ")
-        telefone = int(input("Telefone: "))
-        documento = input("Documento da pessoa: ")
-        nascimento = input("Data de nascimento (AAAA-MM-DD): ")
-        try:
-            self.sert.insert_people(id, nome, telefone, documento, nascimento)
-        except Exception as e:
-            return "Erro ao cadastrar pessoa:", e
-
-    def insert_usuario(self):
-        print("\n=== Cadastro de Usuário ===")
-        id = int(input("ID: "))
-        email = input("Email: ")
-        senha = input("Senha: ")
-        perfil = input("Perfil: ")
-        try:
-            return self.sert.insert_user(id, email, senha, perfil)
-        except Exception as e:
-            return "Erro ao cadastrar usuário:", e
+            print(f"Erro: {e}", file=sys.stderr)

@@ -11,8 +11,7 @@ class CLIUpdateCommand:
         audience_id = int(input("Id da audiência: "))
 
         try:
-            up = UpdateComplaintOnAudience(complaint_id=complaint_id, audience_id=audience_id)
-            up.updt()
+            up = UpdateComp(complaint_id=complaint_id, audience_id=audience_id)
 
         except Exception as error:
             return "Erro ao atualizar id"
