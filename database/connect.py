@@ -89,7 +89,7 @@ class ConnectDatabase:
             if self.conn:
                 self.conn.rollback()
             print(f"Erro na operação: {e}", file=sys.stderr)
-            return False
+            return None
 
     def insert(self, query: str, params: tuple) -> int | None:
         """
@@ -115,11 +115,11 @@ class ConnectDatabase:
 
         Returns:
             list[tuple]: Lista de resultados.
-            bool: False em caso de erro.
+            None: Em caso de erro.
         """
         return self.execute_query(query, params, is_select=True)
 
-    def update(self, query: str, params: tuple) -> bool:
+    def update(self, query: str, params: tuple) -> bool | None:
         """
         Executa uma operação de UPDATE.
 
@@ -128,11 +128,12 @@ class ConnectDatabase:
             params (tuple): Parâmetros da query.
 
         Returns:
-            bool: True se sucesso, False caso contrário.
+            bool: True se sucesso.
+            None: Em caso de erro.
         """
         return self.execute_query(query, params)
 
-    def delete(self, query: str, params: tuple) -> bool:
+    def delete(self, query: str, params: tuple) -> bool | None:
         """
         Executa uma operação de DELETE.
 
@@ -141,7 +142,8 @@ class ConnectDatabase:
             params (tuple): Parâmetros da query.
 
         Returns:
-            bool: True se sucesso, False caso contrário.
+            bool: True se sucesso.
+            None: Em caso de erro.
         """
         return self.execute_query(query, params)
 

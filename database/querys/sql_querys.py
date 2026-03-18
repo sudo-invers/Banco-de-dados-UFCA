@@ -1,67 +1,240 @@
+from datetime import date
 from database.connect import ConnectDatabase
 
 
 class SQLQuery:
+    """
+    Classe responsável por consultas (SELECT) no banco de dados.
+
+    Cada método retorna dados de acordo com critérios específicos.
+
+    Retornos seguem o padrão:
+        list[tuple] -> resultados da consulta
+        None        -> em caso de erro
+    """
+
     def __init__(self):
+        """
+        Inicializa a conexão com o banco de dados.
+        """
         self.conn = ConnectDatabase()
         self.conn.conectar()
 
-    def query_complaint_of_date(self, data):
-        sql = """SELECT * FROM denuncia WHERE data = %s"""
-        dados = (data,)
-        return self.conn.get(sql, dados)
+    def get_complaint_of_date(self, data_denuncia: date) -> list[tuple] | None:
+        """
+        Busca denúncias realizadas em uma data específica.
 
-    def query_complaint_cause(self, cause):
-        sql = """SELECT * FROM denuncia WHERE causa = %s"""
-        dados = (cause,)
-        return self.conn.get(sql, dados)
+        Args:
+            data_denuncia (date): Data da denúncia.
 
-    def query_complaint_cause_period(self, causa, data_ini, data_fim):
-        sql = """SELECT * FROM DENUNCIA 
-                 WHERE causa = %s AND (data_denuncia >= %s AND data_denuncia <= %s)"""
-        dados = (causa, data_ini, data_fim)
-        return self.conn.get(sql, dados)
+        Returns:
+            list[tuple]: Lista de denúncias encontradas.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT *
+            FROM denuncias
+            WHERE data_denuncia = %s
+        """
+        dados: tuple = (data_denuncia,)
+        return self.conn.get(sql_select, dados)
 
-    def query_complaint_accused_name(self, name):
-        sql = """SELECT d.* FROM DENUNCIA d
-                 JOIN ACUSADO a ON d.acusado_id = a.acusado_id
-                 WHERE a.nome = %s"""
-        dados = (name,)
-        return self.conn.get(sql, dados)
+    def get_complaint_cause(self, causa_denuncia: str) -> list[tuple] | None:
+        """
+        Busca denúncias por causa/motivo.
 
-    def query_mediator_city(self, city):
-        sql = """SELECT PESSOA.nome 
-                 FROM MEDIADOR 
-                 JOIN PESSOA ON MEDIADOR.pessoa_id = PESSOA.pessoa_id
-                 JOIN PREFEITURA ON MEDIADOR.prefeitura_id = PREFEITURA.prefeitura_id
-                 JOIN ENDERECO ON PREFEITURA.endereco_id = ENDERECO.endereco_id
-                 WHERE ENDERECO.cidade = %s AND MEDIADOR.status_mediador = 'ATIVO'"""
-        dados = (city,)
-        return self.conn.get(sql, dados)
+        Args:
+            causa_denuncia (str): Causa da denúncia.
 
-    def query_audience_at_date_and_place(self, date, place):
-        sql = """SELECT * FROM AUDIENCIA WHERE data = %s AND local = %s"""
-        dados = (date, place)
-        return self.conn.get(sql, dados)
+        Returns:
+            list[tuple]: Lista de denúncias encontradas.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT *
+            FROM denuncias
+            WHERE causa_denuncia = %s
+        """
+        dados: tuple = (causa_denuncia,)
+        return self.conn.get(sql_select, dados)
 
-    def query_audience_without_agreement(self):
-        sql = """SELECT audiencia_id FROM ACORDO WHERE status_acordo = 'conflito'"""
-        return self.conn.get(sql, None)
+    def get_complaint_cause_period(
+        self, causa_denuncia: str, data_inicio: date, data_fim: date
+    ) -> list[tuple] | None:
+        """
+        Busca denúncias por causa dentro de um período de datas.
 
-    def query_complaint_without_audience(self):
-        sql = """SELECT denuncia_id FROM DENUNCIA WHERE audiencia_id IS NULL"""
-        return self.conn.get(sql, None)
+        Args:
+            causa_denuncia (str): Causa da denúncia.
+            data_inicio (date): Data inicial do período.
+            data_fim (date): Data final do período.
 
-    def query_town_halls(self):
-        sql = """SELECT * FROM PREFEITURA"""
-        return self.conn.get(sql, None)
+        Returns:
+            list[tuple]: Lista de denúncias encontradas.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT *
+            FROM denuncias
+            WHERE causa_denuncia = %s
+              AND (data_denuncia >= %s AND data_denuncia <= %s)
+        """
+        dados: tuple = (causa_denuncia, data_inicio, data_fim)
+        return self.conn.get(sql_select, dados)
 
-    def query_audience_for_accuser(self, accuser_id):
-        sql = """SELECT * FROM AUDIENCIA WHERE acusador_id = %s"""
-        dados = (accuser_id,)
-        return self.conn.get(sql, dados)
+    def get_complaint_accused_name(self, name: str) -> list[tuple] | None:
+        """
+        Busca denúncias associadas a um acusado pelo nome.
 
-    def query_audience_for_accused(self, accused_id):
-        sql = """SELECT * FROM AUDIENCIA WHERE acusado_id = %s"""
-        dados = (accused_id,)
-        return self.conn.get(sql, dados)
+        Args:
+            name (str): Nome da pessoa acusada.
+
+        Returns:
+            list[tuple]: Lista de denúncias encontradas.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT d.*
+            FROM denuncias d
+                JOIN acusados a ON d.acusado_id = a.acusado_id
+                JOIN pessoas p ON a.pessoa_id = p.pessoa_id
+            WHERE p.nome = %s
+        """
+        dados: tuple = (name,)
+        return self.conn.get(sql_select, dados)
+
+    def get_mediator_by_city(self, city: str) -> list[tuple] | None:
+        """
+        Busca mediadores ativos em uma determinada cidade.
+
+        Args:
+            city (str): Nome da cidade.
+
+        Returns:
+            list[tuple]: Lista de nomes dos mediadores.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT pessoas.nome 
+            FROM mediadores
+                JOIN pessoas ON mediadores.pessoa_id = pessoas.pessoa_id
+                JOIN prefeituras ON mediadores.prefeitura_id = prefeituras.prefeitura_id
+                JOIN enderecos ON prefeituras.endereco_id = enderecos.endereco_id
+            WHERE enderecos.cidade = %s
+              AND mediadores.status_mediador = 'ATIVO'
+        """
+        dados: tuple = (city,)
+        return self.conn.get(sql_select, dados)
+
+    def get_audience_at_date_and_place(
+        self, data_audiencia: date, rua: str, bairro: str, cidade: str
+    ) -> list[tuple] | None:
+        """
+        Busca audiências em uma data e local específicos.
+
+        Args:
+            data_audiencia (date): Data da audiência.
+            rua (str): Rua do endereço.
+            bairro (str): Bairro do endereço.
+            cidade (str): Cidade do endereço.
+
+        Returns:
+            list[tuple]: Lista de audiências encontradas.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT a.*
+            FROM audiencias a
+                JOIN enderecos e ON a.endereco_id = e.endereco_id
+            WHERE a.data_audiencia = %s
+              AND e.rua = %s
+              AND e.bairro = %s
+              AND e.cidade = %s
+        """
+        dados: tuple = (data_audiencia, rua, bairro, cidade)
+        return self.conn.get(sql_select, dados)
+
+    def get_audience_without_agreement(self) -> list[tuple] | None:
+        """
+        Busca audiências que possuem acordo com status de conflito.
+
+        Returns:
+            list[tuple]: Lista de audiências em conflito.
+            None: Em caso de erro.
+        """
+        sql_select = """
+            SELECT au.*
+            FROM audiencias au
+                JOIN acordos ac ON au.audiencia_id = ac.audiencia_id
+            WHERE ac.status_acordo = 'CONFLITO'
+        """
+        return self.conn.get(sql_select, params=None)
+
+    def get_complaint_without_audience(self) -> list[tuple] | None:
+        """
+        Busca denúncias que ainda não possuem audiência associada.
+
+        Returns:
+            list[tuple]: Lista de denúncias sem audiência.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT *
+            FROM denuncias
+            WHERE audiencia_id IS NULL
+        """
+        return self.conn.get(sql_select, None)
+
+    def get_city_halls(self) -> list[tuple] | None:
+        """
+        Retorna todas as prefeituras cadastradas.
+
+        Returns:
+            list[tuple]: Lista de prefeituras.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT *
+            FROM prefeituras
+        """
+        return self.conn.get(sql_select, params=None)
+
+    def get_audience_for_accuser(self, accuser_id: int) -> list[tuple] | None:
+        """
+        Busca audiências associadas a um acusador.
+
+        Args:
+            accuser_id (int): ID do acusador.
+
+        Returns:
+            list[tuple]: Lista de audiências.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT a.*
+            FROM audiencias a
+                JOIN denuncias d ON a.audiencia_id = d.audiencia_id
+            WHERE d.acusador_id = %s
+        """
+        dados: tuple = (accuser_id,)
+        return self.conn.get(sql_select, dados)
+
+    def get_audience_for_accused(self, accused_id: int) -> list[tuple] | None:
+        """
+        Busca audiências associadas a um acusado.
+
+        Args:
+            accused_id (int): ID do acusado.
+
+        Returns:
+            list[tuple]: Lista de audiências.
+            None: Em caso de erro.
+        """
+        sql_select: str = """
+            SELECT a.*
+            FROM audiencias a
+                JOIN denuncias d ON a.audiencia_id = d.audiencia_id
+            WHERE d.acusado_id = %s
+        """
+        dados: tuple = (accused_id,)
+        return self.conn.get(sql_select, dados)
