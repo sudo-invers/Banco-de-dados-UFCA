@@ -34,8 +34,6 @@ class CLIUpdateCommand:
         acordo_id = int(input("Digite o id do acordo para confirmar as alterações: "))
         try:
             up = self.repo.update_agreement(status_acordo=status_acordo, data_acordo=data_acordo, acordo_id=acordo_id)
-            if up:
-                print("a")
         except Exception as error:
             return "Erro ao atualizar informações do acordo"
         
