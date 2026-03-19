@@ -250,6 +250,6 @@ git commit -m "Co-authored-by: Dorian Dayvid Gomes Feitosa <OtherDinosaur@users.
 | [José Dhonatan](https://github.com/sudo-invers) | Desenvolvedor  | Refatoração, querys, conexão com banco|
 | [Gabriel Santos](https://github.com/gabriel-so-santos) | Desenvolvedor  | Refatoração, querys, inserts, modelagem der |
 | [Letícia Dias](https://github.com/leticia-software-engineer)  | Desenvolvedor  | Documentação, inserts, comands update, modelagem, classes base|
-| [Sarah Mendes](https://github.com/sarahmendes-ufca)  | Desenvolvedor  | Documentação, cli, comands insert e querys, cli, slides da apresentação|
+| [Sarah Mendes](https://github.com/sarahmendes-ufca)  | Desenvolvedor  | Documentação, cli, comands insert e querys, slides da apresentação|
 
 Obs.: Como o projeto migrou do gitlab para o github, grande parte dos commits, principalmente de Letícia e Sarah ficaram visíveis apenas no repositório de lá.
