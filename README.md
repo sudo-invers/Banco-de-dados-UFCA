@@ -230,7 +230,7 @@ estruturar as informações;
 
 [Clique aqui para acessar o Modelo Conceitual](https://lucid.app/lucidspark/b70cc641-59a2-40bb-931c-fe3e7eaa2408/edit?viewport_loc=-1382%2C-496%2C4656%2C2213%2C0_0&invitationId=inv_30809952-c4bf-4a87-bb95-0981bc8d1def)
 
-[Clique aqui para acessar o Diagrama Entidade Relacionamento](https://lucid.app/lucidchart/bcb44d76-1f22-46a8-8532-32df7a71188b/edit?viewport_loc=-2042%2C-1392%2C2498%2C1202%2C0_0&invitationId=inv_1efd0087-3f3d-479d-9979-f2735bca422a)
+[Clique aqui para acessar o Diagrama Entidade Relacionamento Atualizado](https://lucid.app/lucidchart/bcb44d76-1f22-46a8-8532-32df7a71188b/edit?viewport_loc=-2042%2C-1392%2C2498%2C1202%2C0_0&invitationId=inv_1efd0087-3f3d-479d-9979-f2735bca422a)
 
 [Clique aqui para acessar o Modelo Entidade Relacionamento extendido](https://drive.google.com/file/d/1e1AdAOSJA3Ejn_RfgWzc1QXw4T7juhIS/view?usp=drive_link)
 
@@ -241,3 +241,15 @@ estruturar as informações;
 
 git commit -m "Co-authored-by: Dorian Dayvid Gomes Feitosa <OtherDinosaur@users.noreply.github.com>"
 
+# Contribuições
+
+| Membros  | Funções | Contribuição
+| ------------- | ------------- | ------------- |
+| [Dorian David](https://github.com/OtherDinosaur)  | Desenvolvedor  | Construção dos Updates, CLI, menu |
+| [Elilúcio ](https://github.com/Elilucio) | Desenvolvedor  | Construção do banco de dados, remodelagem, consultas|
+| [José Dhonatan](https://github.com/sudo-invers) | Desenvolvedor  | Refatoração, querys, conexão com banco|
+| [Gabriel Santos](https://github.com/gabriel-so-santos) | Desenvolvedor  | Refatoração, querys, inserts|
+| [Letícia Dias](https://github.com/leticia-software-engineer)  | Desenvolvedor  | Documentação, inserts, comands update, modelagem, classes base|
+| [Sarah Mendes](https://github.com/sarahmendes-ufca)  | Desenvolvedor  | Documentação, cli, comands insert e querys, cli, slides da apresentação|
+
+Obs.: Como o projeto migrou do gitlab para o github, grande parte dos commits, principalmente de Letícia e Sarah ficaram visíveis apenas no repositório de lá.
