@@ -248,7 +248,7 @@ git commit -m "Co-authored-by: Dorian Dayvid Gomes Feitosa <OtherDinosaur@users.
 | [Dorian David](https://github.com/OtherDinosaur)  | Desenvolvedor  | Construção dos Updates, CLI, menu |
 | [Elilúcio ](https://github.com/Elilucio) | Desenvolvedor  | Construção do banco de dados, remodelagem, consultas|
 | [José Dhonatan](https://github.com/sudo-invers) | Desenvolvedor  | Refatoração, querys, conexão com banco|
-| [Gabriel Santos](https://github.com/gabriel-so-santos) | Desenvolvedor  | Refatoração, querys, inserts|
+| [Gabriel Santos](https://github.com/gabriel-so-santos) | Desenvolvedor  | Refatoração, querys, inserts, modelagem der |
 | [Letícia Dias](https://github.com/leticia-software-engineer)  | Desenvolvedor  | Documentação, inserts, comands update, modelagem, classes base|
 | [Sarah Mendes](https://github.com/sarahmendes-ufca)  | Desenvolvedor  | Documentação, cli, comands insert e querys, cli, slides da apresentação|
 
